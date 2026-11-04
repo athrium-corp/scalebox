@@ -6,6 +6,7 @@ Site estático (HTML, CSS e JavaScript puros) com:
 
 - **Escalas**: mais de 50 escalas, cada uma com fórmula, notas, origem e uso. Mostra os desenhos por posição e no braço inteiro.
 - **Famílias de modos**: os 7 modos da escala maior, da menor harmônica, da menor melódica e da maior harmônica.
+- **Harmonia**: do básico ao avançado: intervalos, formação de acordes, campo harmônico (tríades, tétrades e tensões), funções e cadências, progressões, tons vizinhos, dominantes secundários, II–V, SubV, empréstimo modal e diminutos.
 - **CAGED**: escala maior com acordes maj7 e escala menor com acordes m7, com arpejos.
 - **Shapes do professor**: desenhos criados no Modo edição e publicados no site.
 - **Modo edição**: o professor desenha shapes clicando no braço e cria escalas novas.

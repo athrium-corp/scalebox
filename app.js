@@ -364,7 +364,7 @@ function atualizarSelectsEscala(){
 }
 
 /* ---------- navegação ---------- */
-const VIEWS=["escalas","familias","caged","professor","editor"];
+const VIEWS=["escalas","familias","harmonia","caged","professor","editor"];
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
   let v=location.hash.slice(1); if(!VIEWS.includes(v)) v="escalas";
@@ -378,6 +378,7 @@ function renderAtual(v){
   v=v||location.hash.slice(1)||"escalas";
   if(v==="escalas") renderEscalas();
   else if(v==="familias") renderFamilias();
+  else if(v==="harmonia") window.HARMONIA&&HARMONIA.render();
   else if(v==="caged"){renderCaged(CAGED_MAIOR,"cMaj","cTblM",false);renderCaged(CAGED_MENOR,"cMin","cTblm",true);}
   else if(v==="professor") renderProfessor();
   else if(v==="editor") renderEditor();
@@ -435,6 +436,12 @@ function iniciar(){
   $("nsFormula").oninput=previewEscala; $("nsSalvar").onclick=salvarEscala; $("nsExport").onclick=exportarEscalas;
   renderListaEscalas();
 
+  if(window.HARMONIA){
+    preencherTonicas($("hTon"),"C");
+    HARMONIA.iniciar({rotulo:()=>rotulo,texto,familias,escala:id=>ESCMAP.get(id),instr:k=>B.INSTRUMENTOS[k]||B.INSTRUMENTOS.violao,
+      segHarm:()=>{const b=document.querySelector("#hAc button[aria-pressed=true]");return b?b.dataset.v:"tet";},
+      abrirEscala:(id,ton,ins)=>{if(!ESCMAP.has(id))return;$("eEscala").value=id;const t=B.TONICAS.find(x=>x.n===ton)||B.TONICAS.find(x=>x.pc===B.tonica(ton).pc)||B.TONICAS.find(x=>x.pc===(()=>{const l=B.LETRAS.indexOf(ton[0]);let a=0;for(const c of ton.slice(1))a+=c==="#"?1:-1;return B.pc([0,2,4,5,7,9,11][l]+a);})());if(t)$("eTonica").value=t.n;$("eInstr").value=ins;location.hash="escalas";window.scrollTo(0,0);}});
+  }
   window.addEventListener("hashchange",rota);
   rota();
 }
@@ -443,6 +450,7 @@ function prepararImpressao(){
   let t="";
   if(v==="escalas"){const e=escala($("eEscala").value);t=`${nomeNota($("eTonica").value)} · ${e.nome} · ${ins("eInstr")}`;}
   else if(v==="familias"){const f=familias().find(x=>x.id===$("fFam").value);t=`${f?f.nome:"Famílias de modos"} · ${ins("fInstr")}`;}
+  else if(v==="harmonia"){t=HARMONIA.titulo();}
   else if(v==="caged"){t=`CAGED · ${nomeNota($("cMaj").value)} maior e ${nomeNota($("cMin").value)} menor`;}
   else if(v==="professor"){t=CFG.professor?`Shapes de ${CFG.professor}`:"Shapes do professor";}
   else if(v==="editor"){lerForm();t=ED.titulo||"Shape";}
