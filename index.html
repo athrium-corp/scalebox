@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scalebox</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icone-180.png">
+<meta name="description" content="Modos gregos, escalas, CAGED e arpejos no braço do violão e da guitarra.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Outfit:wght@700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header class="topo">
+  <div class="wrap topo-in">
+    <div class="marca">
+      <svg class="logo" viewBox="0 0 120 120" aria-hidden="true">
+        <rect x="5" y="5" width="110" height="110" rx="26" fill="none" stroke="var(--fg)" stroke-width="7"/>
+        <g stroke="var(--fret)" stroke-width="2.5"><line x1="22" y1="27" x2="98" y2="27"/><line x1="22" y1="40" x2="98" y2="40"/><line x1="22" y1="53" x2="98" y2="53"/><line x1="22" y1="66" x2="98" y2="66"/><line x1="22" y1="79" x2="98" y2="79"/><line x1="22" y1="92" x2="98" y2="92"/></g>
+        <g fill="var(--fg)"><circle cx="88" cy="27" r="7"/><circle cx="32" cy="40" r="7"/><circle cx="88" cy="40" r="7"/><circle cx="32" cy="53" r="7"/><circle cx="69" cy="53" r="7"/><circle cx="32" cy="66" r="7"/><circle cx="32" cy="79" r="7"/><circle cx="69" cy="79" r="7"/><circle cx="88" cy="92" r="7"/></g>
+        <g fill="var(--root)"><circle cx="32" cy="27" r="7"/><circle cx="69" cy="66" r="7"/><circle cx="32" cy="92" r="7"/></g>
+      </svg>
+      <div>
+      <h1 id="tituloSite">Scalebox</h1>
+      <p id="subtitulo"></p>
+      </div>
+    </div>
+    <div class="topo-ctl">
+      <button class="btn" id="btnImprimir" title="Imprimir ou salvar em PDF a aba atual">Imprimir / PDF</button>
+      <span class="mini">Rótulos</span>
+      <div class="seg" id="segRotulo" role="group" aria-label="Rótulo das bolinhas">
+        <button data-v="int">Intervalos</button>
+        <button data-v="cifra">Notas (C D E)</button>
+        <button data-v="solf">Notas (Dó Ré Mi)</button>
+      </div>
+    </div>
+  </div>
+  <nav class="abas wrap" aria-label="Seções">
+    <a href="#escalas" data-v="escalas">Escalas</a>
+    <a href="#familias" data-v="familias">Famílias de modos</a>
+    <a href="#caged" data-v="caged">CAGED</a>
+    <a href="#professor" data-v="professor">Shapes do professor</a>
+    <a href="#editor" data-v="editor" id="abaEditor">Modo edição</a>
+  </nav>
+</header>
+
+<div class="print-cab wrap" id="printCab" aria-hidden="true"><strong>scale<span>box</span></strong><span id="printTitulo"></span></div>
+<main class="wrap">
+
+<!-- ESCALAS -->
+<section class="view" id="v-escalas">
+  <div class="controls">
+    <label>Escala <select id="eEscala"></select></label>
+    <label>Tônica <select id="eTonica" class="sel-ton"></select></label>
+    <label>Instrumento <select id="eInstr" class="sel-instr"></select></label>
+  </div>
+  <article class="card info" id="eInfo"></article>
+  <div class="legenda" data-tipo="escala"></div>
+  <h2 class="sub">Posições</h2>
+  <div class="grid-boards" id="ePos"></div>
+  <h2 class="sub">Braço inteiro</h2>
+  <div class="card"><div class="board" id="eBraco"></div></div>
+</section>
+
+<!-- FAMÍLIAS -->
+<section class="view" id="v-familias">
+  <div class="controls">
+    <label>Família <select id="fFam"></select></label>
+    <label>Instrumento <select id="fInstr" class="sel-instr"></select></label>
+    <label><span id="fLbA">Tônica 6ª corda</span> <select id="fTonA" class="sel-ton"></select></label>
+    <label><span id="fLbB">Tônica 5ª corda</span> <select id="fTonB" class="sel-ton"></select></label>
+  </div>
+  <p class="nota" id="fIntro"></p>
+  <div class="legenda" data-tipo="modo"></div>
+  <div class="tabela" id="fTbl"></div>
+</section>
+
+<!-- CAGED -->
+<section class="view" id="v-caged">
+  <p class="nota">O sistema CAGED divide o braço do violão em 5 regiões, cada uma baseada em um acorde aberto (C, A, G, E, D). Cada forma traz o acorde com 7ª, o arpejo e a escala na mesma região. Só para violão e guitarra de 6 cordas.</p>
+  <h2 class="sub">Escala maior · acorde maj7</h2>
+  <div class="controls">
+    <label>Tom maior <select id="cMaj" class="sel-ton"></select></label>
+  </div>
+  <div class="legenda" data-tipo="caged-maior"></div>
+  <div class="tabela" id="cTblM"></div>
+  <h2 class="sub">Escala menor · acorde m7</h2>
+  <div class="controls">
+    <label>Tom menor <select id="cMin" class="sel-ton"></select></label>
+  </div>
+  <div class="legenda" data-tipo="caged-menor"></div>
+  <div class="tabela" id="cTblm"></div>
+  <p class="nota">As formas aparecem na ordem em que sobem pelo braço. A última se emenda na primeira, 12 casas acima. Nos acordes, × é corda abafada.</p>
+</section>
+
+<!-- PROFESSOR -->
+<section class="view" id="v-professor">
+  <div class="controls">
+    <span class="nota" id="pIntro">Shapes preparados pelo professor.</span>
+    <button class="btn" id="pImprimir">Imprimir</button>
+  </div>
+  <div class="grid-cards" id="pPub"></div>
+  <div id="pLocalWrap" hidden>
+    <h2 class="sub">Rascunhos salvos neste navegador</h2>
+    <p class="nota">Só você vê estes shapes. Para publicar, use "Exportar shapes.js" no Modo edição.</p>
+    <div class="grid-cards" id="pLocal"></div>
+  </div>
+</section>
+
+<!-- EDITOR -->
+<section class="view" id="v-editor">
+  <div class="ed-top">
+    <div class="card">
+      <h3>Shape</h3>
+      <div class="form">
+        <label class="full">Título <input id="edTitulo" type="text" placeholder="Ex.: Dórico em Lá · tônica na 6ª corda"></label>
+        <label class="full">Observação para o aluno <textarea id="edDesc" rows="2" placeholder="Opcional"></textarea></label>
+        <label>Instrumento <select id="edInstr" class="sel-instr"></select></label>
+        <label>Tônica <select id="edTonica" class="sel-ton"></select></label>
+        <label>Casa inicial <input id="edLo" type="number" min="0" max="20"></label>
+        <label>Nº de casas <input id="edN" type="number" min="4" max="24"></label>
+        <label class="chk full"><input id="edSemRot" type="checkbox"> Esconder os rótulos para o aluno (exercício)</label>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Preencher a partir de uma escala</h3>
+      <div class="form">
+        <label class="full">Escala <select id="gEscala"></select></label>
+        <label>Tônica na corda <select id="gCorda"></select></label>
+        <label>Área <select id="gArea"><option value="pos">Posição (5 casas)</option><option value="todo">Braço inteiro</option></select></label>
+      </div>
+      <div class="acoes"><button class="btn primario" id="gBtn">Preencher</button></div>
+      <p class="nota">Substitui as bolinhas atuais pelas notas da escala, já com tônica e intervalo característico. Depois ajuste à mão.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ferramentas" role="group" aria-label="Ferramenta">
+      <button data-t="r" class="tool"><i class="sw k-root"></i>Tônica</button>
+      <button data-t="n" class="tool"><i class="sw k-dot"></i>Nota</button>
+      <button data-t="c" class="tool"><i class="sw k-char"></i>Característica</button>
+      <button data-t="d" class="tool"><i class="sw k-hi"></i>Destaque</button>
+      <button data-t="p" class="tool"><i class="sw k-extra"></i>Passagem</button>
+      <button data-t="txt" class="tool">Aa Texto</button>
+      <button data-t="x" class="tool">Apagar</button>
+      <label class="txt-wrap" id="txtWrap" hidden>Texto <input id="edTxt" type="text" maxlength="4" placeholder="ex.: i, m, 1º"></label>
+      <span class="sp"></span>
+      <button class="btn" id="edDesfazer">Desfazer</button>
+      <button class="btn" id="edLimpar">Limpar</button>
+    </div>
+    <p class="nota" id="edDica">Clique numa casa para marcar. Clicar de novo com a mesma ferramenta remove. Ao marcar uma tônica, o tom do shape muda para essa nota.</p>
+    <div class="board ed-board" id="edBoard"></div>
+    <div class="acoes">
+      <button class="btn primario" id="edSalvar">Salvar</button>
+      <button class="btn" id="edSalvarNovo">Salvar como novo</button>
+      <button class="btn" id="edNovo">Novo shape</button>
+      <span class="sp"></span>
+      <button class="btn" id="edPng">Baixar PNG</button>
+      <button class="btn" id="edSvg">Baixar SVG</button>
+    </div>
+    <p class="status" id="edStatus" role="status"></p>
+  </div>
+
+  <div class="ed-top">
+    <div class="card">
+      <h3>Meus shapes</h3>
+      <p class="nota">Ficam salvos neste navegador. Para que os alunos vejam, exporte o arquivo e envie para o GitHub (veja o passo a passo no README).</p>
+      <ul class="lista" id="edLista"></ul>
+      <div class="acoes">
+        <button class="btn primario" id="edExport">Exportar shapes.js</button>
+        <label class="btn file">Importar arquivo<input id="edImport" type="file" accept=".js,.json"></label>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Nova escala</h3>
+      <div class="form">
+        <label>Nome <input id="nsNome" type="text" placeholder="Ex.: Escala do maracatu"></label>
+        <label>Grupo <input id="nsGrupo" type="text" list="nsGrupos" placeholder="Minhas escalas"></label>
+        <datalist id="nsGrupos"></datalist>
+        <label class="full">Fórmula <input id="nsFormula" type="text" placeholder="1 2 3 4 5 6 b7"></label>
+        <label class="full">Intervalos característicos <input id="nsCaract" type="text" placeholder="b7"></label>
+        <label class="full">De onde vem <textarea id="nsOrigem" rows="2"></textarea></label>
+        <label class="full">Para que usar <textarea id="nsUso" rows="2"></textarea></label>
+      </div>
+      <p class="status" id="nsPrev"></p>
+      <div class="acoes">
+        <button class="btn primario" id="nsSalvar">Salvar escala</button>
+        <button class="btn" id="nsExport">Exportar escalas-extra.js</button>
+      </div>
+      <ul class="lista" id="nsLista"></ul>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="wrap rodape" id="rodape"></footer>
+<div class="print-rodape" id="printRodape" aria-hidden="true"></div>
+
+<script src="config.js"></script>
+<script src="escalas.js"></script>
+<script src="escalas-extra.js"></script>
+<script src="shapes.js"></script>
+<script src="braco.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
