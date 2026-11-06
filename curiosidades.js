@@ -8,7 +8,7 @@
 window.GUITARRISTAS={
 "B.B. King":{"foto": "", "desc": "EUA · blues", "musica": "The Thrill Is Gone", "video": "SgXSomPE_FY"},
 "Eric Clapton":{"foto": "", "desc": "Inglaterra · blues e rock", "musica": "Layla", "video": "kseSoguuiCs"},
-"Jimi Hendrix":{"foto": "", "desc": "EUA · rock e blues", "musica": "Purple Haze", "video": "I-PK3sbxvhw"},
+"Jimi Hendrix":{"foto": "", "desc": "EUA · rock e blues", "musica": "Purple Haze", "video": "WGoDaYjdfSg"},
 "Joe Bonamassa":{"foto": "", "desc": "EUA · blues rock", "musica": "Going Down (Greek Theatre)", "video": "WB687ozItP0"},
 "John Frusciante":{"foto": "", "desc": "EUA · rock alternativo e funk", "musica": "Under the Bridge (Red Hot Chili Peppers)", "video": "GLvohMXgcBo"},
 "Kirk Hammett":{"foto": "", "desc": "EUA · thrash metal", "musica": "Enter Sandman (Metallica)", "video": "CD-E-LDc384"},
