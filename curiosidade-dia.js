@@ -27,9 +27,9 @@ function irTema(t){const [a,ton,suf]=t.split(":");
   window.scrollTo(0,0);}
 function ytId(u){const m=String(u||"").match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:"";}
 function yt(n,tit){return "https://www.youtube.com/results?search_query="+encodeURIComponent(n+" "+tit);}
-function vidDe(i){const g=G[L[i][0]]||{};let v=g.video;if(Array.isArray(v)){const k=L.slice(0,i).filter(c=>c[0]===L[i][0]).length;v=v[k%v.length];}return ytId(v)||(/^[\w-]{11}$/.test(v||"")?v:"");}
-function video(i){const id=vidDe(i);return id?`<div class="cur-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="${E((G[L[i][0]]||{}).musica||L[i][0])}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`:"";}
-function cartao(i){const [n,tit,txt,tema]=L[i];const g=G[n]||{};const mus=g.musica||"",vid=vidDe(i);
+function vidDe(i){if(L[i][5])return L[i][5];const g=G[L[i][0]]||{};let v=g.video;if(Array.isArray(v)){const k=L.slice(0,i).filter(c=>c[0]===L[i][0]).length;v=v[k%v.length];}return ytId(v)||(/^[\w-]{11}$/.test(v||"")?v:"");}
+function video(i){const id=vidDe(i);return id?`<div class="cur-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="${E(L[i][4]||(G[L[i][0]]||{}).musica||L[i][0])}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`:"";}
+function cartao(i){const [n,tit,txt,tema]=L[i];const g=G[n]||{};const mus=L[i][4]||g.musica||"",vid=vidDe(i);
   const rot=i===hoje()?"Curiosidade do dia · Dia "+(i+1)+" de "+L.length:"Dia "+(i+1)+" de "+L.length;
   return `<article class="cur-card grande">
     <div class="cur-quem">${avatar(n,true)}<div><strong>${E(n)}</strong><span>${E(g.desc||"")}</span></div></div>
