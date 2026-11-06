@@ -306,3 +306,36 @@ h2.sub{font-family:var(--f-display);font-size:clamp(24px,3.5vw,32px);text-transf
   .ed-print p{margin:0 0 8px}
   .ed-print svg.braco{width:100%;max-width:16cm !important;min-width:0 !important}
 }
+
+/* curiosidades */
+.cur-hoje{margin-bottom:18px}
+.cur-card{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:18px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:16px 18px}
+.cur-card h3{font:700 22px/1.15 var(--f-display);margin:2px 0 6px;letter-spacing:.01em}
+.cur-card p{margin:0 0 10px}
+.cur-card .eyebrow{margin:0;color:var(--accent);font:600 12px var(--f-body);text-transform:uppercase;letter-spacing:.08em}
+.cur-quem{display:flex;gap:12px;align-items:center}
+.cur-quem strong{display:block;font-size:16px}
+.cur-quem div span{font-size:13px;color:var(--muted)}
+.cur-av{width:44px;height:44px;border-radius:50%;flex:none;display:inline-grid;place-items:center;font:700 15px var(--f-body);color:#fff;background:hsl(var(--h,20) 45% 38%);object-fit:cover}
+.cur-av.grande{width:84px;height:84px;font-size:28px}
+.cur-card.grande{grid-template-columns:1fr;margin-bottom:22px}
+.cur-card.grande h3{font-size:30px}
+.cur-card.grande p{font-size:16px;max-width:70ch}
+.cur-acoes{display:flex;gap:8px;flex-wrap:wrap}
+.cur-acoes a.btn{text-decoration:none}
+.cur-lista-tit{font:700 20px var(--f-display);margin:8px 0}
+.cur-lista{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.cur-lista button{width:100%;display:flex;gap:10px;align-items:center;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--fg);font:inherit;cursor:pointer}
+.cur-lista button:hover{border-color:var(--fg)}
+.cur-lista .atual button{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.cur-lista .cur-av{width:32px;height:32px;font-size:12px}
+.cur-lista strong{display:block;font-size:14px;line-height:1.25}
+.cur-lista small{color:var(--muted);font-size:12px}
+.cur-n{font:600 12px var(--f-mono);color:var(--muted);min-width:2.2em}
+@media (max-width:640px){.cur-card{grid-template-columns:1fr}}
+@media print{.cur-hoje,.cur-lista,.cur-lista-tit{display:none}.cur-card{break-inside:avoid}}
+.cur-video{margin-top:14px;max-width:720px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.cur-video iframe{width:100%;height:100%;border:0;display:block}
+@media print{.cur-video{display:none}}
+.cur-musica{font:600 14px var(--f-body);color:var(--muted);margin:8px 0 10px!important}
+.cur-card.grande .cur-video{margin-top:4px}

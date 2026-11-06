@@ -38,6 +38,7 @@
     </div>
   </div>
   <nav class="abas wrap" aria-label="Seções">
+    <a href="#curiosidades" data-v="curiosidades">Curiosidades</a>
     <a href="#escalas" data-v="escalas">Escalas</a>
     <a href="#familias" data-v="familias">Famílias de modos</a>
     <a href="#harmonia" data-v="harmonia">Harmonia</a>
@@ -52,6 +53,19 @@
 
 <div class="print-cab wrap" id="printCab" aria-hidden="true"><strong>scale<span>box</span></strong><span id="printTitulo"></span></div>
 <main class="wrap">
+
+<!-- CURIOSIDADES -->
+<section class="view" id="v-curiosidades">
+  <div class="controls">
+    <button class="btn" id="curAnt">← Anterior</button>
+    <button class="btn primario" id="curHojeBtn">Hoje</button>
+    <button class="btn" id="curProx">Próxima →</button>
+    <label>Guitarrista <select id="curFiltro"></select></label>
+  </div>
+  <p class="nota">Uma curiosidade por dia sobre grandes guitarristas, com um vídeo e um tema do site para estudar: escala, acorde, campo harmônico ou arpejo.</p>
+  <div id="curOut"></div>
+</section>
+
 
 <!-- ESCALAS -->
 <section class="view" id="v-escalas">
@@ -283,7 +297,7 @@
     </div>
     <nav class="rodape-col" aria-label="Estudo">
       <h4>Estudo</h4>
-      <ul><li><a href="#escalas">Escalas</a></li><li><a href="#familias">Famílias de modos</a></li><li><a href="#harmonia">Harmonia</a></li><li><a href="#caged">CAGED</a></li></ul>
+      <ul><li><a href="#escalas">Escalas</a></li><li><a href="#familias">Famílias de modos</a></li><li><a href="#harmonia">Harmonia</a></li><li><a href="#caged">CAGED</a></li><li><a href="#curiosidades">Curiosidades</a></li></ul>
     </nav>
     <nav class="rodape-col" aria-label="Acordes e professor">
       <h4>Acordes</h4>
@@ -298,9 +312,11 @@
 <script src="escalas.js"></script>
 <script src="escalas-extra.js"></script>
 <script src="shapes.js"></script>
+<script src="curiosidades.js"></script>
 <script src="braco.js"></script>
 <script src="harmonia.js"></script>
 <script src="acordes.js"></script>
+<script src="curiosidade-dia.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
