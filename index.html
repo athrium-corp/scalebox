@@ -43,6 +43,7 @@
     <a href="#harmonia" data-v="harmonia">Harmonia</a>
     <a href="#acordes" data-v="acordes">Acordes</a>
     <a href="#campo" data-v="campo">Campo harmônico</a>
+    <a href="#arpejos" data-v="arpejos">Arpejos</a>
     <a href="#caged" data-v="caged">CAGED</a>
     <a href="#professor" data-v="professor">Shapes do professor</a>
     <a href="#editor" data-v="editor" id="abaEditor">Modo edição</a>
@@ -129,6 +130,16 @@
   <div id="chOut" class="hconteudo"></div>
 </section>
 
+<!-- ARPEJOS -->
+<section class="view" id="v-arpejos">
+  <div class="controls">
+    <label>Tônica <select id="arTon" class="sel-ton"></select></label>
+    <label>Acorde <select id="arTipo"></select></label>
+    <span class="nota">Desenhos para violão e guitarra de 6 cordas.</span>
+  </div>
+  <div id="arOut" class="hconteudo"></div>
+</section>
+
 <!-- CAGED -->
 <section class="view" id="v-caged">
   <p class="nota">O sistema CAGED divide o braço do violão em 5 regiões, cada uma baseada em um acorde aberto (C, A, G, E, D). Cada forma traz o acorde com 7ª, o arpejo e a escala na mesma região. Só para violão e guitarra de 6 cordas.</p>
@@ -177,8 +188,7 @@
         <label class="full">Observação para o aluno <textarea id="edDesc" rows="2" placeholder="Opcional"></textarea></label>
         <label>Instrumento <select id="edInstr" class="sel-instr"></select></label>
         <label>Tônica <select id="edTonica" class="sel-ton"></select></label>
-        <label>Casa inicial <input id="edLo" type="number" min="0" max="20"></label>
-        <label>Nº de casas <input id="edN" type="number" min="4" max="24"></label>
+        <label class="full">Na impressão e nos arquivos (PNG/SVG) <select id="edArea"><option value="auto">Recortar só a região desenhada</option><option value="todo">Mostrar o braço inteiro</option></select></label>
         <label class="chk full"><input id="edSemRot" type="checkbox"> Esconder os rótulos para o aluno (exercício)</label>
       </div>
     </div>
@@ -208,8 +218,9 @@
       <button class="btn" id="edDesfazer">Desfazer</button>
       <button class="btn" id="edLimpar">Limpar</button>
     </div>
-    <p class="nota" id="edDica">Clique numa casa para marcar. Clicar de novo com a mesma ferramenta remove. Ao marcar uma tônica, o tom do shape muda para essa nota.</p>
+    <p class="nota" id="edDica">O braço inteiro fica livre para desenhar. Clique numa casa para marcar; clicar de novo com a mesma ferramenta remove. Ao marcar uma tônica, o tom do shape muda para essa nota. Ao salvar, imprimir ou baixar, o desenho é recortado na região usada (ou mostra o braço inteiro, se você escolher).</p>
     <div class="board ed-board" id="edBoard"></div>
+    <div class="ed-print" id="edPrint" aria-hidden="true"></div>
     <div class="acoes">
       <button class="btn primario" id="edSalvar">Salvar</button>
       <button class="btn" id="edSalvarNovo">Salvar como novo</button>
@@ -218,6 +229,9 @@
       <button class="btn" id="edPng">Baixar PNG</button>
       <button class="btn" id="edSvg">Baixar SVG</button>
     </div>
+    <label class="coment-box" for="edComent"><span>Comentários</span>
+      <textarea id="edComent" rows="4" placeholder="Ex.: Use os dedos 1 e 3. Comece devagar, a 60 bpm. Repare na nota azul (6ª maior)."></textarea>
+      <small>Os comentários vão junto quando você baixa a imagem (PNG/SVG) e quando imprime.</small></label>
     <p class="status" id="edStatus" role="status"></p>
   </div>
 
@@ -273,7 +287,7 @@
     </nav>
     <nav class="rodape-col" aria-label="Acordes e professor">
       <h4>Acordes</h4>
-      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#professor">Shapes do professor</a></li></ul>
+      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#arpejos">Arpejos</a></li><li><a href="#professor">Shapes do professor</a></li></ul>
     </nav>
   </div>
   <div class="wrap rodape-base"><span id="rodapeCopy">© Scalebox</span><span id="rodapeSite">scalebox.app.br</span></div>

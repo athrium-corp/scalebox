@@ -170,13 +170,24 @@ function dotsDoShape(sh,mostrarSempre){
 }
 function svgShape(sh,editavel){
   const ins=B.INSTRUMENTOS[sh.instrumento]||B.INSTRUMENTOS.violao;
-  return B.desenhar({midi:ins.midi,lo:sh.casaInicial,hi:sh.casaInicial+sh.casas-1,min:4,dots:dotsDoShape(sh,editavel),editavel,fw:editavel?84:58,label:sh.titulo});
+  if(editavel) return B.desenhar({midi:ins.midi,lo:0,hi:ins.casas,dots:dotsDoShape(sh,true),editavel:true,fw:60,label:sh.titulo});
+  return B.desenhar({midi:ins.midi,lo:sh.casaInicial,hi:sh.casaInicial+sh.casas-1,min:4,dots:dotsDoShape(sh,false),editavel:false,fw:58,label:sh.titulo});
+}
+/* região do desenho para salvar, imprimir e exportar */
+function recorte(sh){
+  const ins=B.INSTRUMENTOS[sh.instrumento]||B.INSTRUMENTOS.violao, n=ins.midi.length;
+  const dots=sh.dots.filter(d=>d.s<n&&d.f<=ins.casas);
+  if(sh.area==="todo"||!dots.length) return {...sh,dots,casaInicial:0,casas:sh.area==="todo"?ins.casas+1:5};
+  const fs=dots.map(d=>d.f), mn=Math.min(...fs), mx=Math.max(...fs);
+  const lo=mn<=1?0:mn-1, hi=Math.min(ins.casas,Math.max(mx+1,lo+4));
+  return {...sh,dots,casaInicial:lo,casas:hi-lo+1};
 }
 function cardShape(sh,local){
   const ins=B.INSTRUMENTOS[sh.instrumento]||B.INSTRUMENTOS.violao;
   return `<article class="card shape-card"><h3>${E(sh.titulo||"Sem título")}</h3>
     ${sh.descricao?`<p class="nota">${E(sh.descricao)}</p>`:""}
     <div class="board">${svgShape(sh,false)}</div>
+    ${sh.comentarios?`<div class="coment-card">${E(sh.comentarios)}</div>`:""}
     <div class="cap"><span>${E(ins.nome)} · tom ${E(sh.tonica)}</span></div>
     <div class="acoes">${local?`<button class="btn" data-abrir="${E(sh.id)}" data-local="1">Editar</button>`:`<button class="btn" data-abrir="${E(sh.id)}">Editar no editor</button>`}</div>
   </article>`;
@@ -197,13 +208,13 @@ function renderProfessor(){
 
 /* ---------- editor ---------- */
 let ED=null, hist=[], ferramenta="n";
-function novoShape(){return {id:null,titulo:"",descricao:"",instrumento:CFG.instrumentoPadrao,tonica:"A",casaInicial:4,casas:5,semRotulo:false,dots:[]};}
+function novoShape(){return {id:null,titulo:"",descricao:"",comentarios:"",instrumento:CFG.instrumentoPadrao,tonica:"A",casaInicial:4,casas:5,semRotulo:false,dots:[]};}
 function abrirNoEditor(sh){ED=Object.assign(novoShape(),sh);hist=[];sincronizarForm();location.hash="editor";renderEditor();status("");}
 function snap(){hist.push(JSON.stringify(ED));if(hist.length>80)hist.shift();}
 function sincronizarForm(){
-  $("edTitulo").value=ED.titulo||""; $("edDesc").value=ED.descricao||"";
+  $("edTitulo").value=ED.titulo||""; $("edDesc").value=ED.descricao||""; $("edComent").value=ED.comentarios||"";
   $("edInstr").value=ED.instrumento; $("edTonica").value=ED.tonica;
-  $("edLo").value=ED.casaInicial; $("edN").value=ED.casas; $("edSemRot").checked=!!ED.semRotulo;
+  $("edArea").value=ED.area==="todo"?"todo":"auto"; $("edSemRot").checked=!!ED.semRotulo;
   preencherCordas();
 }
 function preencherCordas(){
@@ -213,6 +224,7 @@ function preencherCordas(){
 }
 function renderEditor(){
   $("edBoard").innerHTML=svgShape(ED,true);
+  $("edPrint").innerHTML=`${ED.titulo?`<h3>${E(ED.titulo)}</h3>`:""}${ED.descricao?`<p>${E(ED.descricao)}</p>`:""}`+svgShape(recorte(ED),false)+`<div class="coment-print" id="edPrintComent">${E(ED.comentarios||"")}</div>`;
   const ul=$("edLista");
   ul.innerHTML=meusShapes.length?meusShapes.map(s=>`<li><span>${E(s.titulo||"Sem título")}</span><div>
     <button class="btn" data-a="abrir" data-id="${E(s.id)}">Abrir</button>
@@ -230,15 +242,13 @@ function status(msg,tipo){const el=$("edStatus");el.textContent=msg;el.className
 const novoId=()=>"s"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 function salvarLista(){ if(!store.set("meus",meusShapes)) status("Não foi possível salvar neste navegador. Exporte o arquivo para não perder o trabalho.","erro"); }
 function lerForm(){
-  ED.titulo=$("edTitulo").value.trim(); ED.descricao=$("edDesc").value.trim();
-  ED.casaInicial=Math.max(0,Math.min(20,parseInt($("edLo").value)||0));
-  ED.casas=Math.max(4,Math.min(24,parseInt($("edN").value)||5));
+  ED.titulo=$("edTitulo").value.trim(); ED.descricao=$("edDesc").value.trim(); ED.comentarios=$("edComent").value.trim();
+  ED.area=$("edArea").value;
   ED.semRotulo=$("edSemRot").checked;
 }
 function salvar(comoNovo){
   lerForm();
-  const hi=ED.casaInicial+ED.casas-1, n=B.INSTRUMENTOS[ED.instrumento].midi.length;
-  const limpo={...ED,dots:ED.dots.filter(d=>d.f>=ED.casaInicial&&d.f<=hi&&d.s<n)};
+  const limpo=recorte(ED);
   if(!limpo.titulo) limpo.titulo="Shape sem título";
   if(comoNovo||!limpo.id) limpo.id=novoId();
   const i=meusShapes.findIndex(x=>x.id===limpo.id);
@@ -282,15 +292,36 @@ function baixar(nome,conteudo,tipoMime){
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
 }
 const slug=s=>(s||"shape").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"shape";
+function quebrar(txt,max){
+  const out=[];
+  String(txt||"").split(/\n/).forEach(par=>{let l="";par.split(/\s+/).forEach(w=>{if(!w)return;if((l+" "+w).trim().length>max){if(l)out.push(l);l=w;}else l=(l+" "+w).trim();});out.push(l);});
+  while(out.length&&!out[out.length-1]) out.pop();
+  return out;
+}
 function svgParaArquivo(){
   lerForm();
-  const tmp=document.createElement("div");tmp.innerHTML=svgShape(ED,false);
+  const tmp=document.createElement("div");tmp.innerHTML=svgShape(recorte(ED),false);
   const svg=tmp.querySelector("svg"), vb=svg.viewBox.baseVal, cs=getComputedStyle(document.documentElement);
-  let s=svg.outerHTML.replace(/var\(--([\w-]+)\)/g,(m,v)=>cs.getPropertyValue("--"+v).trim()||"#000").replace(/ style="[^"]*"/,"");
-  const fundo=cs.getPropertyValue("--panel").trim();
-  s=s.replace("<svg",`<svg xmlns="http://www.w3.org/2000/svg" width="${vb.width}" height="${vb.height}"`).replace(/(<svg[^>]*>)/,`$1<rect width="100%" height="100%" fill="${fundo}"/>`);
-  if(ED.titulo) s=s.replace(/(<svg[^>]*>)/,`$1<title>${E(ED.titulo)}</title>`);
-  return {s,w:vb.width,h:vb.height};
+  const cor=v=>cs.getPropertyValue("--"+v).trim()||"#000";
+  let interno=svg.outerHTML.replace(/var\(--([\w-]+)\)/g,(m,v)=>cor(v)).replace(/ style="[^"]*"/,"").replace(/ role="img"/,"");
+  const W=Math.max(vb.width,520), pad=24, fonte='font-family="IBM Plex Sans,Arial,sans-serif"';
+  let y=pad, partes="";
+  if(ED.titulo){partes+=`<text x="${pad}" y="${y+22}" ${fonte} font-size="22" font-weight="700" fill="${cor("fg")}">${E(ED.titulo)}</text>`;y+=34;}
+  if(ED.descricao){quebrar(ED.descricao,Math.floor((W-pad*2)/7.5)).forEach(l=>{partes+=`<text x="${pad}" y="${y+14}" ${fonte} font-size="14" fill="${cor("muted")}">${E(l)}</text>`;y+=20;});y+=6;}
+  const xD=Math.round((W-vb.width)/2);
+  interno=interno.replace("<svg",`<svg x="${xD}" y="${y}" width="${vb.width}" height="${vb.height}"`);
+  y+=vb.height;
+  const linhas=quebrar(ED.comentarios,Math.floor((W-pad*2-24)/7.6));
+  if(linhas.length){
+    const hBox=linhas.length*21+44;
+    partes+=`<rect x="${pad}" y="${y+8}" width="${W-pad*2}" height="${hBox}" rx="10" fill="${cor("chip")}"/>`;
+    partes+=`<text x="${pad+14}" y="${y+32}" ${fonte} font-size="12" font-weight="700" letter-spacing="1.2" fill="${cor("muted")}">COMENTÁRIOS</text>`;
+    linhas.forEach((l,i)=>{partes+=`<text x="${pad+14}" y="${y+56+i*21}" ${fonte} font-size="15" fill="${cor("fg")}">${E(l)}</text>`;});
+    y+=hBox+16;
+  }
+  const H=y+pad;
+  const s=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${ED.titulo?`<title>${E(ED.titulo)}</title>`:""}<rect width="100%" height="100%" fill="${cor("panel")}"/>${partes}${interno}</svg>`;
+  return {s,w:W,h:H};
 }
 function baixarPng(){
   const {s,w,h}=svgParaArquivo(), img=new Image();
@@ -364,7 +395,7 @@ function atualizarSelectsEscala(){
 }
 
 /* ---------- navegação ---------- */
-const VIEWS=["escalas","familias","harmonia","acordes","campo","caged","professor","editor"];
+const VIEWS=["escalas","familias","harmonia","acordes","campo","arpejos","caged","professor","editor"];
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
   let v=location.hash.slice(1); if(!VIEWS.includes(v)) v="escalas";
@@ -381,6 +412,7 @@ function renderAtual(v){
   else if(v==="harmonia") window.HARMONIA&&HARMONIA.render();
   else if(v==="acordes") window.ACORDES&&ACORDES.render();
   else if(v==="campo") window.CAMPO&&CAMPO.render();
+  else if(v==="arpejos") window.ARPEJOS&&ARPEJOS.render();
   else if(v==="caged"){renderCaged(CAGED_MAIOR,"cMaj","cTblM",false);renderCaged(CAGED_MENOR,"cMin","cTblm",true);window.ACORDES&&ACORDES.renderCaged();}
   else if(v==="professor") renderProfessor();
   else if(v==="editor") renderEditor();
@@ -421,8 +453,9 @@ function iniciar(){
   document.querySelectorAll('.tool:not([data-t="n"])').forEach(b=>b.setAttribute("aria-pressed","false"));
   $("edBoard").addEventListener("click",ev=>{const h=ev.target.closest(".hit");if(h)clicarCasa(+h.dataset.s,+h.dataset.f);});
   $("edTitulo").oninput=$("edDesc").oninput=()=>{lerForm();guardarRascunho();};
+  $("edComent").oninput=()=>{lerForm();guardarRascunho();$("edPrintComent").textContent=ED.comentarios||"";};
   $("edSemRot").onchange=()=>{lerForm();renderEditor();};
-  $("edLo").onchange=$("edN").onchange=()=>{snap();lerForm();renderEditor();};
+  $("edArea").onchange=()=>{lerForm();renderEditor();};
   $("edInstr").onchange=()=>{snap();ED.instrumento=$("edInstr").value;preencherCordas();renderEditor();};
   $("edTonica").onchange=()=>{snap();ED.tonica=$("edTonica").value;renderEditor();};
   $("edDesfazer").onclick=()=>{const h=hist.pop();if(h){ED=JSON.parse(h);sincronizarForm();renderEditor();}else status("Nada para desfazer.");};
@@ -445,7 +478,7 @@ function iniciar(){
       segHarm:()=>{const b=document.querySelector("#hAc button[aria-pressed=true]");return b?b.dataset.v:"tet";},
       abrirEscala:(id,ton,ins)=>{if(!ESCMAP.has(id))return;$("eEscala").value=id;const t=B.TONICAS.find(x=>x.n===ton)||B.TONICAS.find(x=>x.pc===B.tonica(ton).pc)||B.TONICAS.find(x=>x.pc===(()=>{const l=B.LETRAS.indexOf(ton[0]);let a=0;for(const c of ton.slice(1))a+=c==="#"?1:-1;return B.pc([0,2,4,5,7,9,11][l]+a);})());if(t)$("eTonica").value=t.n;$("eInstr").value=ins;location.hash="escalas";window.scrollTo(0,0);}});
     HARMONIA.iniciar(API);
-    if(window.ACORDES){preencherTonicas($("aTon"),"C");preencherTonicas($("chTon"),"C");preencherTonicas($("crTon"),"C");ACORDES.iniciar(API);}
+    if(window.ACORDES){preencherTonicas($("aTon"),"C");preencherTonicas($("chTon"),"C");preencherTonicas($("crTon"),"C");preencherTonicas($("arTon"),"C");ACORDES.iniciar(API);}
   }
   window.addEventListener("hashchange",rota);
   rota();
@@ -458,6 +491,7 @@ function prepararImpressao(){
   else if(v==="harmonia"){t=HARMONIA.titulo();}
   else if(v==="acordes"){t=ACORDES.titulo();}
   else if(v==="campo"){t=CAMPO.titulo();}
+  else if(v==="arpejos"){t=ARPEJOS.titulo();}
   else if(v==="caged"){t=`CAGED · ${nomeNota($("cMaj").value)} maior e ${nomeNota($("cMin").value)} menor`;}
   else if(v==="professor"){t=CFG.professor?`Shapes de ${CFG.professor}`:"Shapes do professor";}
   else if(v==="editor"){lerForm();t=ED.titulo||"Shape";}

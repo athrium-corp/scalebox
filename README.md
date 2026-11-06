@@ -9,6 +9,7 @@ Site estático (HTML, CSS e JavaScript puros) com:
 - **Harmonia**: do básico ao avançado: intervalos, formação de acordes, campo harmônico (tríades, tétrades e tensões), funções e cadências, progressões, tons vizinhos, dominantes secundários, II–V, SubV, empréstimo modal e diminutos.
 - **Acordes**: dicionário completo com desenhos gerados automaticamente (tônica na 6ª, 5ª e 4ª corda), todas as inversões, fragmentos em todas as regiões, acordes relativos, notas opcionais nos desenhos com baixo na 5ª corda. Para adicionar tipos de acorde, edite a lista TIPOS no início de `acordes.js`.
 - **Campo harmônico**: escolha qualquer acorde (tríade, tétrade ou com tensões) e veja o campo da própria nota escolhida (o acorde é sempre o I grau; nos campos maior e menor também aparece o relativo), montado com a mesma estrutura, em todas as inversões e com a tônica na 6ª, 5ª ou 4ª corda. Inclui um dicionário de double stops (3ªs, 6ªs, 4ªs, 5ªs, 10ªs e oitavas) para cada campo.
+- **Arpejos**: para qualquer acorde e suas variações, o arpejo no braço inteiro, por região do CAGED, pela corda da tônica, em 2 oitavas e os arpejos de substituição.
 - **CAGED**: escala maior com acordes maj7 e escala menor com acordes m7, com arpejos, e o CAGED reduzido (cada forma recortada nas cordas agudas) para qualquer acorde.
 - **Shapes do professor**: desenhos criados no Modo edição e publicados no site.
 - **Modo edição**: o professor desenha shapes clicando no braço e cria escalas novas.
@@ -59,7 +60,7 @@ O botão **Imprimir / PDF** no topo imprime a aba aberta, sempre com fundo branc
 Clicar de novo com a mesma ferramenta remove a bolinha. **Desfazer** (ou Ctrl+Z) volta um passo.
 Marque **Esconder os rótulos** para criar exercícios: o aluno vê só as bolinhas.
 Os rótulos seguem o botão do topo: intervalos, notas em cifra (C D E) ou em solfejo (Dó Ré Mi).
-**Baixar PNG / SVG** gera uma imagem do shape para apostilas e slides.
+**Baixar PNG / SVG** gera uma imagem do shape para apostilas e slides. A caixa **Comentários** (dicas, digitação, andamento) vai junto na imagem e na impressão.
 
 ## Editar o conteúdo à mão
 

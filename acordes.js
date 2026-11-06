@@ -412,6 +412,86 @@ function renderCagedRed(){
   $("crOut").innerHTML=h+`</div>`;
 }
 
+
+/* ---------- arpejos ---------- */
+function qualidade(t){const l=B.lerFormula(t.f).map(i=>i.lb);const has=x=>l.includes(x);
+  if(has("b3")&&has("b5"))return "dim"; if(has("3")&&has("#5"))return "aum"; if(has("b3"))return "menor"; if(has("3"))return "maior"; if(has("4"))return "sus4"; if(has("2"))return "sus2"; return "outro";}
+const NOMEQ={maior:"maiores",menor:"menores",dim:"diminutos",aum:"aumentados",sus4:"sus4",sus2:"sus2",outro:"outros"};
+function dotsArp(raiz,lista){return lista.map(d=>({s:d.s,f:d.f,kind:d.semi===0?"root":isTens(d.lb)?"char":"dot",text:H.texto(raiz,d.lb)}));}
+function cardArp(titulo,sub,raiz,dots,lo,hi,fw){
+  return `<article class="ac-card"><h4>${E(titulo)}</h4>${sub?`<p class="nota">${E(sub)}</p>`:""}<div class="board">${B.desenhar({midi:GTR,lo,hi,dots,fw:fw||54})}</div></article>`;
+}
+function linear(raiz,ivs,s0){
+  // 2 oitavas, de preferência 2 notas por corda, subindo a partir da tônica na corda s0
+  let r=B.pc(raiz.pc-GTR[s0]); if(r<1) r+=12;
+  const ini=GTR[s0]+r, sem=ivs.map(i=>i.semi).sort((a,b)=>a-b), seq=[];
+  for(let o=0;o<3;o++) for(const x of sem){const m=ini+x+12*o; if(m<=ini+24) seq.push({m,lb:ivs.find(i=>i.semi===x).lb});}
+  seq.sort((a,b)=>a.m-b.m);
+  const out=[]; let s=s0, n=0, base=r;
+  for(const nt of seq){
+    let f=nt.m-GTR[s];
+    if(n>=2||f>base+4){ if(s<5&&nt.m-GTR[s+1]>=0){s++;n=0;f=nt.m-GTR[s];base=Math.min(base,f);} }
+    if(f<0||f>17) continue;
+    if(n===0) base=Math.min(f,base+2);
+    out.push({s,f,semi:B.pc(nt.m-raiz.pc),lb:nt.lb}); n++;
+  }
+  return out;
+}
+function renderArp(){
+  if(!H||!$("arOut")) return;
+  const raiz=B.tonica($("arTon").value), tipo=TMAP.get($("arTipo").value)||TMAP.get("7M"), ivs=B.lerFormula(tipo.f);
+  const esc={ivs,caract:[],base:null}, nome=nomeCifra(raiz.n+tipo.suf);
+  const q=qualidade(tipo), vars=TIPOS.filter(t=>qualidade(t)===q);
+  const notas=ivs.map(i=>H.rotulo()==="solf"?B.soletrar(raiz,i.lb,true):B.soletrar(raiz,i.lb));
+  // arpejos de substituição: tríades e tétrades contidas no acorde
+  const pcs=new Set(ivs.map(i=>B.pc(raiz.pc+i.semi))), subs=[];
+  for(let r=0;r<12;r++) for(const t of TIPOS){
+    const tl=B.lerFormula(t.f); if(tl.length>4||(r===raiz.pc&&t===tipo)) continue;
+    if(!["","m","°","+","7M","7","m7","m7(b5)","°7","m(7M)","6","m6"].includes(t.suf)) continue;
+    if(tl.every(i=>pcs.has(B.pc(r+i.semi)))&&!(r===raiz.pc&&tl.length>=ivs.length)) subs.push({r,t});
+  }
+  let h=`<article class="card campo-cab">
+    <div class="cc-head"><div><span class="eyebrow">Arpejo</span><span class="ac-grande">${E(nome)}</span></div><span class="badge-campo">${E(tipo.g)}</span></div>
+    <p class="lead">Arpejo é tocar as notas do acorde uma de cada vez. Aqui estão todos os desenhos de ${E(nome)}: no braço inteiro, por região, por corda e em 2 oitavas.</p>
+    <dl class="fatos"><div><dt>Fórmula</dt><dd class="mono">${E(ivs.map(i=>i.lb).join(" · "))}</dd></div><div><dt>Notas</dt><dd class="mono">${E(notas.join(" "))}</dd></div>
+    <div><dt>Notas no arpejo</dt><dd>${ivs.length}</dd></div><div><dt>Família</dt><dd>Acordes ${E(NOMEQ[q])}</dd></div>
+    <div class="larga"><dt>Variações</dt><dd><div class="emp">${vars.map(t=>`<button class="pill pbtn${t===tipo?" on":""}" data-var="${E(t.suf)}">${E(nomeCifra(raiz.n+t.suf))}</button>`).join("")}</div></dd></div></dl></article>`;
+
+  // braço inteiro
+  h+=`<h2 class="sub">No braço inteiro</h2><div class="card"><div class="board ds-braco">${B.desenhar({midi:GTR,lo:0,hi:15,dots:dotsArp(raiz,B.notasJanela(esc,GTR,raiz,0,15,false)),fw:52})}</div></div>`;
+
+  // por região do CAGED
+  h+=`<h2 class="sub">Por região (CAGED)</h2><p class="nota">O arpejo dentro de cada uma das 5 formas do CAGED, na ordem em que sobem pelo braço. Juntas, elas cobrem o braço todo.</p><div class="ac-grid">`;
+  FORMAS.map(F=>{let r=B.pc(raiz.pc-GTR[F.str]);while(r+F.lo<0)r+=12;return {F,lo:r+F.lo,hi:r+F.hi};}).sort((a,b)=>a.lo-b.lo).forEach(R=>{
+    const lo=Math.max(0,R.lo), hi=Math.max(R.hi,lo+4);
+    h+=cardArp(`Forma ${R.F.n}`,`casas ${lo}–${hi}`,raiz,dotsArp(raiz,B.notasJanela(esc,GTR,raiz,lo,hi,true)),lo,hi);
+  });
+  h+=`</div>`;
+
+  // por corda da tônica
+  h+=`<h2 class="sub">Pela corda da tônica</h2><p class="nota">Um desenho de 5 casas começando na tônica, na 6ª, na 5ª e na 4ª corda.</p><div class="ac-grid">`;
+  [0,1,2].forEach(s=>{const p=B.posicao(esc,GTR,s,raiz);h+=cardArp(`Tônica na ${6-s}ª corda`,`casas ${p.lo}–${p.hi}`,raiz,dotsArp(raiz,p.dots),p.lo,p.hi);});
+  h+=`</div>`;
+
+  // linear
+  h+=`<h2 class="sub">Em 2 oitavas (desenho linear)</h2><p class="nota">O arpejo subindo duas oitavas, com até 2 notas por corda. Bom para palhetada alternada e para o sweep.</p><div class="ac-grid lin">`;
+  [0,1].forEach(s0=>{const l=linear(raiz,ivs,s0);if(!l.length)return;const fr=l.map(x=>x.f),lo=Math.max(0,Math.min(...fr)-1),hi=Math.max(lo+4,Math.max(...fr));
+    h+=cardArp(`Começando na ${6-s0}ª corda`,`casas ${lo}–${hi}`,raiz,dotsArp(raiz,l),lo,hi,48);});
+  h+=`</div>`;
+
+  // substituições
+  h+=`<h2 class="sub">Arpejos de substituição</h2><p class="nota">Acordes que cabem dentro de ${E(nome)}. Tocar o arpejo de um deles por cima de ${E(nome)} soa certo e dá outra cor à frase. Clique para ver o arpejo.</p>`;
+  if(subs.length){
+    h+=`<div class="ac-grid">${subs.map(({r,t})=>{const rz=objNota(NOMES[r]);const lb=B.PADRAO[B.pc(r-raiz.pc)];const tv=B.lerFormula(t.f);
+      const sobre=tv.map(i=>{const semi=B.pc(r+i.semi-raiz.pc);const iv=ivs.find(x=>x.semi===semi);return iv?iv.lb:B.PADRAO[semi];});
+      return `<button class="ac-card sub-card" data-sub="${E(NOMES[r])}|${E(t.suf)}"><h4>${E(nomeCifra(NOMES[r]+t.suf))}</h4><p class="nota">Começa no ${E(lb)} de ${E(nome)}</p><p class="tabn">notas = ${E(sobre.join(" "))} de ${E(nome)}</p></button>`;}).join("")}</div>`;
+  } else h+=`<p class="nota">Nenhuma tríade ou tétrade diferente cabe dentro deste acorde.</p>`;
+
+  $("arOut").innerHTML=h;
+  $("arOut").querySelectorAll("[data-var]").forEach(b=>b.onclick=()=>{$("arTipo").value=b.dataset.var;renderArp();});
+  $("arOut").querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{const [n,suf]=b.dataset.sub.split("|");const t=B.TONICAS.find(x=>x.n===n)||B.TONICAS.find(x=>x.pc===objNota(n).pc);$("arTon").value=t.n;$("arTipo").value=suf;renderArp();window.scrollTo(0,0);});
+}
+
 /* ---------- dicionário ---------- */
 const SETS4=[[[0,2,3,4],"Tônica na 6ª corda","cordas 6, 4, 3 e 2 (drop 3)"],[[1,2,3,4],"Tônica na 5ª corda","cordas 5, 4, 3 e 2 (drop 2, forma de Lá)"],[[2,3,4,5],"Tônica na 4ª corda","cordas 4, 3, 2 e 1 (drop 2)"],[[1,3,4,5],"Tônica na 5ª corda (aberta)","cordas 5, 3, 2 e 1 (drop 3)"]];
 const SETS3=[[[3,4,5],"Cordas 3-2-1"],[[2,3,4],"Cordas 4-3-2"],[[1,2,3],"Cordas 5-4-3"],[[0,1,2],"Cordas 6-5-4"]];
@@ -477,10 +557,12 @@ function iniciar(api){
   $("aTipo").innerHTML=[...gr].map(([g,l])=>`<optgroup label="${g}">${l.map(t=>`<option value="${E(t.suf)}">${E(t.suf===""?"Maior":t.suf)}</option>`).join("")}</optgroup>`).join("");
   $("aTipo").value="7M";
   ["aTon","aTipo"].forEach(id=>$(id).onchange=render);
+  if($("arTipo")){$("arTipo").innerHTML=$("aTipo").innerHTML;$("arTipo").value="7M";["arTon","arTipo"].forEach(id=>$(id).onchange=renderArp);}
   if($("crTipo")){$("crTipo").innerHTML=$("aTipo").innerHTML;$("crTipo").value="";["crTon","crTipo"].forEach(id=>$(id).onchange=renderCagedRed);}
   if($("chTipo")){$("chTipo").innerHTML=$("aTipo").innerHTML;$("chTipo").value="7M";["chTon","chTipo"].forEach(id=>$(id).onchange=()=>renderCampoAba());}
 }
 function titulo(){return `Acordes · ${$("aTon").value}${$("aTipo").value}`;}
+window.ARPEJOS={render:()=>renderArp(),titulo:()=>`Arpejos · ${$("arTon").value}${$("arTipo").value}`};
 window.CAMPO={render:()=>{if(H)renderCampoAba();},titulo:()=>`Campo harmônico · ${$("chTon").value}${$("chTipo").value}`};
 window.ACORDES={iniciar,render,titulo,renderCaged:()=>renderCagedRed(),nomear,_teste:{resolver,melhor,extras,TIPOS,objNota,GTR}};
 })();
