@@ -398,7 +398,7 @@ function atualizarSelectsEscala(){
 const VIEWS=["curiosidades","escalas","familias","harmonia","acordes","campo","arpejos","caged","professor","editor"];
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
-  let v=location.hash.slice(1); if(!VIEWS.includes(v)) v="curiosidades";
+  let v=location.hash.slice(1); if(!VIEWS.includes(v)) v="escalas";
   if(v==="editor") store.set("editorDesbloqueado",true);
   $("abaEditor").hidden=!editorVisivel();
   VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v;});
@@ -406,7 +406,7 @@ function rota(){
   renderAtual(v);
 }
 function renderAtual(v){
-  v=v||location.hash.slice(1)||"curiosidades";
+  v=v||location.hash.slice(1)||"escalas";
   if(v==="escalas") renderEscalas();
   else if(v==="curiosidades") window.CURIOS&&CURIOS.render();
   else if(v==="familias") renderFamilias();
@@ -485,7 +485,7 @@ function iniciar(){
   rota();
 }
 function prepararImpressao(){
-  const v=location.hash.slice(1)||"curiosidades", ins=id=>B.INSTRUMENTOS[$(id).value].nome;
+  const v=location.hash.slice(1)||"escalas", ins=id=>B.INSTRUMENTOS[$(id).value].nome;
   let t="";
   if(v==="escalas"){const e=escala($("eEscala").value);t=`${nomeNota($("eTonica").value)} · ${e.nome} · ${ins("eInstr")}`;}
   else if(v==="familias"){const f=familias().find(x=>x.id===$("fFam").value);t=`${f?f.nome:"Famílias de modos"} · ${ins("fInstr")}`;}
