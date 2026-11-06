@@ -193,6 +193,63 @@ h2.sub{font-family:var(--f-display);font-size:clamp(24px,3.5vw,32px);text-transf
 @media (max-width:700px){.info-ac{grid-template-columns:1fr}}
 .hsec .board svg.braco{max-width:560px}
 @media print{.sub-nav{display:none !important}.hsec,.campo-card{break-inside:avoid}.tab{min-width:0}}
+
+/* ---------- acordes ---------- */
+.sub-tabs button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.sub-tabs button{font-size:14px;padding:9px 16px}
+.ac-cab{display:flex;flex-direction:column;gap:14px}
+.ac-nome{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.ac-grande{font-family:var(--f-mono);font-weight:600;font-size:clamp(34px,6vw,52px);color:var(--accent);line-height:1}
+.ac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.ac-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.ac-card h4{margin:0;font-family:var(--f-mono);font-size:16px;color:var(--accent)}
+.ac-card .nota{font-size:12px}
+.ac-card .board svg.braco{min-width:200px}
+.tabn{margin:0;font:600 13px var(--f-mono);color:var(--muted);letter-spacing:.08em}
+.vazio-ac{opacity:.6}
+.ac-card.atual{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.pbtn{border:1px solid var(--line);cursor:pointer;font:inherit;color:var(--fg)}
+.pbtn.on{background:var(--fg);color:var(--bg)}
+.pbtn.on .mono{color:var(--bg)}
+.seq-i.on{box-shadow:inset 0 0 0 2px var(--accent)}
+.mini-h{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.ac-grid.campo7{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.ac-h3{font-family:var(--f-display);font-size:20px;text-transform:uppercase;margin:6px 0 0;letter-spacing:.02em}
+.ac-sub{margin:4px 0 0;font-size:13px;font-weight:600;color:var(--muted)}
+#aBraco svg.braco,.ds-braco svg.braco{min-width:760px}
+.ac-grid.prog{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+@media print{.sub-tabs{display:none !important}.ac-card{break-inside:avoid}.ac-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* ---------- cabeçalho do campo ---------- */
+.campo-cab{display:flex;flex-direction:column;gap:16px;padding:24px}
+.cc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.cc-head>div{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font:600 11px var(--f-body);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.badge-campo{font:600 13px var(--f-body);padding:7px 14px;border-radius:999px;background:var(--chip);border:1px solid var(--line)}
+.lead{margin:0;font-size:16px;line-height:1.55;max-width:80ch}
+.aviso{margin:0;font-size:13px;padding:10px 14px;border-radius:8px;background:var(--chip);border-left:3px solid var(--accent)}
+.fatos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:0;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.fatos>div{background:var(--panel);padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.fatos>div.larga{grid-column:1/-1;flex-direction:row;align-items:baseline;gap:16px;flex-wrap:wrap}
+.fatos dt{font:600 11px var(--f-body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);min-width:120px}
+.fatos dd{margin:0;font-size:14px}
+@media (max-width:760px){.fatos{grid-template-columns:repeat(2,minmax(0,1fr))}.fatos>div.larga{flex-direction:column;gap:4px}}
+
+/* ---------- rodapé ---------- */
+.rodape-site{border-top:1px solid var(--line);background:var(--panel);margin-top:32px}
+.rodape-in{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);gap:28px;padding-block:32px 24px}
+.rodape-marca{display:flex;flex-direction:column;gap:10px}
+.rodape-logo{display:flex;align-items:center;gap:10px}
+.rodape-logo svg{width:36px;height:36px}
+.rodape-logo strong{font-family:"Outfit",var(--f-body);font-size:24px;letter-spacing:-.02em}
+.rodape-logo strong span{color:var(--accent)}
+.rodape-marca p{margin:0;color:var(--muted);font-size:13px;max-width:42ch}
+.rodape-col h4{margin:0 0 10px;font:600 11px var(--f-body);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.rodape-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rodape-col a{color:var(--fg);text-decoration:none;font-size:14px}
+.rodape-col a:hover{color:var(--accent)}
+.rodape-base{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-block:14px 22px;font-size:12px;color:var(--muted)}
+@media (max-width:760px){.rodape-in{grid-template-columns:1fr 1fr}.rodape-marca{grid-column:1/-1}}
 /* ---------- impressão / PDF ---------- */
 .print-cab,.print-rodape{display:none}
 @page{size:A4;margin:12mm}
@@ -207,7 +264,7 @@ h2.sub{font-family:var(--f-display);font-size:clamp(24px,3.5vw,32px);text-transf
     color-scheme:light}
   html,body{background:#fff !important}
   body{font-size:11pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .topo,.controls,.acoes,.rodape,.link,.ferramentas,#edDica,#edStatus,#pLocalWrap,.ed-top,.vazio{display:none !important}
+  .topo,.controls,.acoes,.rodape-site,.link,.ferramentas,#edDica,#edStatus,#pLocalWrap,.ed-top,.vazio{display:none !important}
   .print-cab{display:flex !important;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:2px solid #1b2430;padding:0 0 6px !important;margin-bottom:10px}
   .print-cab strong{font-family:"Outfit",var(--f-body);font-size:20pt;letter-spacing:-.02em}
   .print-cab strong span{color:#d9480f}

@@ -41,6 +41,8 @@
     <a href="#escalas" data-v="escalas">Escalas</a>
     <a href="#familias" data-v="familias">Famílias de modos</a>
     <a href="#harmonia" data-v="harmonia">Harmonia</a>
+    <a href="#acordes" data-v="acordes">Acordes</a>
+    <a href="#campo" data-v="campo">Campo harmônico</a>
     <a href="#caged" data-v="caged">CAGED</a>
     <a href="#professor" data-v="professor">Shapes do professor</a>
     <a href="#editor" data-v="editor" id="abaEditor">Modo edição</a>
@@ -105,6 +107,28 @@
   <div id="hConteudo" class="hconteudo"></div>
 </section>
 
+<!-- ACORDES -->
+<section class="view" id="v-acordes">
+  <div id="aDic">
+    <div class="controls">
+      <label>Tônica <select id="aTon" class="sel-ton"></select></label>
+      <label>Acorde <select id="aTipo"></select></label>
+      <span class="nota">Desenhos para violão e guitarra de 6 cordas.</span>
+    </div>
+    <div id="aDicOut" class="hconteudo"></div>
+  </div>
+</section>
+
+<!-- CAMPO HARMÔNICO -->
+<section class="view" id="v-campo">
+  <div class="controls">
+    <label>Tônica do acorde <select id="chTon" class="sel-ton"></select></label>
+    <label>Tipo de acorde <select id="chTipo"></select></label>
+    <span class="nota">O campo é montado com a mesma estrutura do acorde escolhido.</span>
+  </div>
+  <div id="chOut" class="hconteudo"></div>
+</section>
+
 <!-- CAGED -->
 <section class="view" id="v-caged">
   <p class="nota">O sistema CAGED divide o braço do violão em 5 regiões, cada uma baseada em um acorde aberto (C, A, G, E, D). Cada forma traz o acorde com 7ª, o arpejo e a escala na mesma região. Só para violão e guitarra de 6 cordas.</p>
@@ -121,6 +145,12 @@
   <div class="legenda" data-tipo="caged-menor"></div>
   <div class="tabela" id="cTblm"></div>
   <p class="nota">As formas aparecem na ordem em que sobem pelo braço. A última se emenda na primeira, 12 casas acima. Nos acordes, × é corda abafada.</p>
+  <h2 class="sub">CAGED reduzido</h2>
+  <div class="controls">
+    <label>Tônica <select id="crTon" class="sel-ton"></select></label>
+    <label>Acorde <select id="crTipo"></select></label>
+  </div>
+  <div id="crOut" class="hconteudo"></div>
 </section>
 
 <!-- PROFESSOR -->
@@ -223,7 +253,31 @@
 </section>
 
 </main>
-<footer class="wrap rodape" id="rodape"></footer>
+<footer class="rodape-site" id="rodape">
+  <div class="wrap rodape-in">
+    <div class="rodape-marca">
+      <div class="rodape-logo">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <rect x="5" y="5" width="110" height="110" rx="26" fill="none" stroke="var(--fg)" stroke-width="7"/>
+          <g stroke="var(--fret)" stroke-width="2.5"><line x1="22" y1="27" x2="98" y2="27"/><line x1="22" y1="40" x2="98" y2="40"/><line x1="22" y1="53" x2="98" y2="53"/><line x1="22" y1="66" x2="98" y2="66"/><line x1="22" y1="79" x2="98" y2="79"/><line x1="22" y1="92" x2="98" y2="92"/></g>
+          <g fill="var(--fg)"><circle cx="88" cy="27" r="7"/><circle cx="32" cy="40" r="7"/><circle cx="88" cy="40" r="7"/><circle cx="32" cy="53" r="7"/><circle cx="69" cy="53" r="7"/><circle cx="32" cy="66" r="7"/><circle cx="32" cy="79" r="7"/><circle cx="69" cy="79" r="7"/><circle cx="88" cy="92" r="7"/></g>
+          <g fill="var(--root)"><circle cx="32" cy="27" r="7"/><circle cx="69" cy="66" r="7"/><circle cx="32" cy="92" r="7"/></g>
+        </svg>
+        <strong>scale<span>box</span></strong>
+      </div>
+      <p id="rodapeTexto">Escalas, modos, acordes e harmonia no braço do instrumento. Feito para quem estuda e para quem ensina música.</p>
+    </div>
+    <nav class="rodape-col" aria-label="Estudo">
+      <h4>Estudo</h4>
+      <ul><li><a href="#escalas">Escalas</a></li><li><a href="#familias">Famílias de modos</a></li><li><a href="#harmonia">Harmonia</a></li><li><a href="#caged">CAGED</a></li></ul>
+    </nav>
+    <nav class="rodape-col" aria-label="Acordes e professor">
+      <h4>Acordes</h4>
+      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#professor">Shapes do professor</a></li></ul>
+    </nav>
+  </div>
+  <div class="wrap rodape-base"><span id="rodapeCopy">© Scalebox</span><span id="rodapeSite">scalebox.app.br</span></div>
+</footer>
 <div class="print-rodape" id="printRodape" aria-hidden="true"></div>
 
 <script src="config.js"></script>
@@ -232,6 +286,7 @@
 <script src="shapes.js"></script>
 <script src="braco.js"></script>
 <script src="harmonia.js"></script>
+<script src="acordes.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
