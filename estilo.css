@@ -339,3 +339,22 @@ h2.sub{font-family:var(--f-display);font-size:clamp(24px,3.5vw,32px);text-transf
 @media print{.cur-video{display:none}}
 .cur-musica{font:600 14px var(--f-body);color:var(--muted);margin:8px 0 10px!important}
 .cur-card.grande .cur-video{margin-top:4px}
+
+/* identificar acorde */
+.id-ex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#idTab.erro{border-color:var(--erro);outline-color:var(--erro)}
+.id-board{overflow-x:auto}
+.id-notas{display:flex;flex-wrap:wrap;gap:6px}
+.id-notas span{display:inline-flex;flex-direction:column;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font:600 15px var(--f-mono);line-height:1.2}
+.id-notas small{font:500 11px var(--f-body);color:var(--muted)}
+.id-carac{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.id-carac li{display:flex;gap:10px;align-items:baseline;font-size:15px}
+.id-lb{min-width:3.2em;text-align:center;padding:2px 6px;border-radius:6px;background:var(--chip);font-size:13px}
+.id-alts{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.id-alt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit;cursor:pointer}
+.id-alt b{font:700 18px var(--f-display);letter-spacing:.01em}
+.id-alt small{color:var(--muted);font-size:12px}
+.id-alt:hover{border-color:var(--fg)}
+.id-alt.on{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.mini-t{color:var(--muted);font-size:12px}
+@media print{.id-alts{grid-template-columns:repeat(3,1fr)}#idEx,#idLimpar{display:none}}
