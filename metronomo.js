@@ -55,8 +55,10 @@ function agendar(){
 }
 function alternar(){
   rodando=!rodando;
-  if(rodando){const ctx=SOM.contexto();batida=0;prox=ctx.currentTime+.08;timer=setInterval(agendar,25);agendar();}
-  else{clearInterval(timer);document.querySelectorAll("#mtDots i").forEach(d=>d.classList.remove("on"));}
+  if(rodando){SOM.liberar&&SOM.liberar();const ctx=SOM.contexto();
+    const comecar=()=>{if(!rodando||timer)return;batida=0;prox=ctx.currentTime+.1;timer=setInterval(agendar,25);agendar();};
+    if(ctx.state==="running") comecar(); else { ctx.resume().then(comecar,comecar); setTimeout(comecar,300); }}
+  else{clearInterval(timer);timer=null;document.querySelectorAll("#mtDots i").forEach(d=>d.classList.remove("on"));}
   $("mtPlay").textContent=rodando?"■ Parar":"▶ Iniciar";
   $("btnMetro")&&$("btnMetro").classList.toggle("ativo",rodando);
 }
