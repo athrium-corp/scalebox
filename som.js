@@ -13,9 +13,25 @@ function contexto(){
     saida=ctx.createGain(); saida.gain.value=.9;
     saida.connect(corpo); corpo.connect(madeira); madeira.connect(brilho); brilho.connect(comp); comp.connect(ctx.destination);
   }
-  if(ctx.state==="suspended") ctx.resume();
+  if(ctx.state!=="running") ctx.resume();
   return ctx;
 }
+/* Celular (iPhone/iPad, no Safari e no Chrome): o som do site respeita a chave de silencioso
+   e só começa depois de um toque. Aqui o som é liberado no primeiro toque e passa a sair
+   como música (mesmo com o aparelho no silencioso). */
+const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+let liberado=false, mudo=null;
+function liberar(){
+  try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){}
+  if(IOS&&!navigator.audioSession){
+    if(!mudo){mudo=new Audio("data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==");mudo.loop=true;mudo.setAttribute("playsinline","");mudo.volume=0.01;}
+    const p=mudo.play(); if(p&&p.catch) p.catch(()=>{});
+  }
+  const c=contexto();
+  if(!liberado){ try{const b=c.createBuffer(1,1,c.sampleRate),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0);}catch(e){} liberado=true; }
+}
+["pointerdown","touchend","keydown"].forEach(ev=>document.addEventListener(ev,()=>{ if(!liberado||(ctx&&ctx.state!=="running")) liberar(); },{capture:true,passive:true}));
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&ctx&&ctx.state!=="running"&&liberado) ctx.resume(); });
 // gera (e guarda) o som de uma corda para a nota MIDI
 function buffer(midi){
   const chave=midi; if(cache.has(chave)) return cache.get(chave);
@@ -64,10 +80,10 @@ function clique(t,forte,fraco){
   const o=ctx.createOscillator(), g=ctx.createGain(), bp=ctx.createBiquadFilter();
   o.type="square"; o.frequency.value=forte?1760:fraco?900:1180;
   bp.type="bandpass"; bp.frequency.value=forte?2400:fraco?1300:1700; bp.Q.value=4;
-  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(forte?.9:fraco?.25:.55,t+.001); g.gain.exponentialRampToValueAtTime(.0008,t+.045);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(forte?1:fraco?.35:.7,t+.001); g.gain.exponentialRampToValueAtTime(.0008,t+.045);
   o.connect(bp); bp.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+.06);
 }
 // prepara os sons com antecedência para o primeiro acorde não atrasar
 function preparar(midis){contexto();midis.forEach(m=>buffer(m));}
-window.SOM={contexto,nota,acorde,abafar,sessao,encerrar,clique,preparar,agora:()=>contexto().currentTime,_buffer:m=>{contexto();return buffer(m);}};
+window.SOM={liberar,contexto,nota,acorde,abafar,sessao,encerrar,clique,preparar,agora:()=>contexto().currentTime,_buffer:m=>{contexto();return buffer(m);}};
 })();
