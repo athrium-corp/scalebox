@@ -13,25 +13,27 @@ function contexto(){
     saida=ctx.createGain(); saida.gain.value=.9;
     saida.connect(corpo); corpo.connect(madeira); madeira.connect(brilho); brilho.connect(comp); comp.connect(ctx.destination);
   }
-  if(ctx.state!=="running") ctx.resume();
+  if(ctx.state!=="running"){ const p=ctx.resume(); if(p&&p.catch) p.catch(()=>{}); }
   return ctx;
 }
-/* Celular (iPhone/iPad, no Safari e no Chrome): o som do site respeita a chave de silencioso
-   e só começa depois de um toque. Aqui o som é liberado no primeiro toque e passa a sair
-   como música (mesmo com o aparelho no silencioso). */
+/* Celular (iPhone/iPad, no Safari e no Chrome): o som só pode começar depois de um toque
+   e, sem ajuste, respeita a chave de silencioso. Aqui o som passa a sair como música e é
+   liberado no primeiro toque (touchend/click, que são os gestos que o iPhone aceita). */
 const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} // antes de criar o áudio
 let liberado=false, mudo=null;
 function liberar(){
-  try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){}
-  if(IOS&&!navigator.audioSession){
-    if(!mudo){mudo=new Audio("data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==");mudo.loop=true;mudo.setAttribute("playsinline","");mudo.volume=0.01;}
-    const p=mudo.play(); if(p&&p.catch) p.catch(()=>{});
+  if(IOS&&!navigator.audioSession){ // iPhones mais antigos: um áudio silencioso tira o site do modo "silencioso"
+    try{ if(!mudo){mudo=document.createElement("audio");mudo.setAttribute("x-webkit-airplay","deny");mudo.preload="auto";mudo.loop=true;
+      mudo.src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQQAAACAgICA";}
+      const p=mudo.play(); if(p&&p.catch) p.catch(()=>{}); }catch(e){}
   }
   const c=contexto();
-  if(!liberado){ try{const b=c.createBuffer(1,1,c.sampleRate),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0);}catch(e){} liberado=true; }
+  if(!liberado){ try{const b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0);}catch(e){} }
+  if(c.state==="running") liberado=true;
 }
-["pointerdown","touchend","keydown"].forEach(ev=>document.addEventListener(ev,()=>{ if(!liberado||(ctx&&ctx.state!=="running")) liberar(); },{capture:true,passive:true}));
-document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&ctx&&ctx.state!=="running"&&liberado) ctx.resume(); });
+["touchend","click","keydown"].forEach(ev=>document.addEventListener(ev,()=>{ if(!liberado||(ctx&&ctx.state!=="running")) liberar(); },{capture:true,passive:true}));
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&ctx&&ctx.state!=="running") ctx.resume().catch(()=>{}); });
 // gera (e guarda) o som de uma corda para a nota MIDI
 function buffer(midi){
   const chave=midi; if(cache.has(chave)) return cache.get(chave);
