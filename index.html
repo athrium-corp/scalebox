@@ -43,6 +43,7 @@
     <a href="#harmonia" data-v="harmonia">Harmonia</a>
     <a href="#acordes" data-v="acordes">Acordes</a>
     <a href="#campo" data-v="campo">Campo harmônico</a>
+    <a href="#regiao" data-v="regiao">Tocar por região</a>
     <a href="#arpejos" data-v="arpejos">Arpejos</a>
     <a href="#caged" data-v="caged">CAGED</a>
     <a href="#identificar" data-v="identificar">Identificar acorde</a>
@@ -137,6 +138,20 @@
     <span class="nota">O campo é montado com a mesma estrutura do acorde escolhido.</span>
   </div>
   <div id="chOut" class="hconteudo"></div>
+</section>
+
+<!-- TOCAR POR REGIÃO -->
+<section class="view" id="v-regiao">
+  <div class="controls">
+    <label>Tom <select id="rgTon" class="sel-ton"></select></label>
+    <label>Modo <select id="rgModo"><option value="maior">Maior</option><option value="menor">Menor</option></select></label>
+    <label>Região <select id="rgReg"></select></label>
+    <label>Estilo <select id="rgEst"><option value="animado">Animado · inversões</option><option value="worship">Worship · fragmentos</option></select></label>
+    <label>Acordes <select id="rgTipo"><option value="tri">Tríades</option><option value="tet">Tétrades</option></select></label>
+    <label id="rgSoltasL" class="chk" hidden><input type="checkbox" id="rgSoltas" checked> Usar cordas soltas (até a casa 5)</label>
+  </div>
+  <p class="nota">Escolha um tom e uma região de 5 casas. Todos os acordes do campo harmônico aparecem dentro dessa região, nas inversões que deixam a mão quase parada.</p>
+  <div id="rgOut" class="hconteudo"></div>
 </section>
 
 <!-- ARPEJOS -->
@@ -309,7 +324,7 @@
     </nav>
     <nav class="rodape-col" aria-label="Acordes e professor">
       <h4>Acordes</h4>
-      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#arpejos">Arpejos</a></li><li><a href="#identificar">Identificar acorde</a></li><li><a href="#professor">Shapes do professor</a></li></ul>
+      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#regiao">Tocar por região</a></li><li><a href="#arpejos">Arpejos</a></li><li><a href="#identificar">Identificar acorde</a></li><li><a href="#professor">Shapes do professor</a></li></ul>
     </nav>
   </div>
   <div class="wrap rodape-base"><span id="rodapeCopy">© Scalebox</span><span id="rodapeSite">scalebox.app.br</span></div>
@@ -324,6 +339,7 @@
 <script src="braco.js"></script>
 <script src="harmonia.js"></script>
 <script src="acordes.js"></script>
+<script src="regiao.js"></script>
 <script src="identificar.js"></script>
 <script src="curiosidade-dia.js"></script>
 <script src="app.js"></script>

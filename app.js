@@ -395,7 +395,7 @@ function atualizarSelectsEscala(){
 }
 
 /* ---------- navegação ---------- */
-const VIEWS=["curiosidades","escalas","familias","harmonia","acordes","campo","arpejos","caged","identificar","professor","editor"];
+const VIEWS=["curiosidades","escalas","familias","harmonia","acordes","campo","regiao","arpejos","caged","identificar","professor","editor"];
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
   let v=location.hash.slice(1); if(!VIEWS.includes(v)) v="escalas";
@@ -416,6 +416,7 @@ function renderAtual(v){
   else if(v==="arpejos") window.ARPEJOS&&ARPEJOS.render();
   else if(v==="caged"){renderCaged(CAGED_MAIOR,"cMaj","cTblM",false);renderCaged(CAGED_MENOR,"cMin","cTblm",true);window.ACORDES&&ACORDES.renderCaged();}
   else if(v==="identificar") window.IDENT&&IDENT.render();
+  else if(v==="regiao") window.REGIAO&&REGIAO.render();
   else if(v==="professor") renderProfessor();
   else if(v==="editor") renderEditor();
   else renderEscalas();
@@ -482,6 +483,7 @@ function iniciar(){
     HARMONIA.iniciar(API);
     if(window.ACORDES){preencherTonicas($("aTon"),"C");preencherTonicas($("chTon"),"C");preencherTonicas($("crTon"),"C");preencherTonicas($("arTon"),"C");ACORDES.iniciar(API);}
     if(window.IDENT) IDENT.iniciar(API);
+    if(window.REGIAO) REGIAO.iniciar(API);
   }
   window.addEventListener("hashchange",rota);
   rota();
@@ -496,6 +498,7 @@ function prepararImpressao(){
   else if(v==="campo"){t=CAMPO.titulo();}
   else if(v==="arpejos"){t=ARPEJOS.titulo();}
   else if(v==="caged"){t=`CAGED · ${nomeNota($("cMaj").value)} maior e ${nomeNota($("cMin").value)} menor`;}
+  else if(v==="regiao"){t=window.REGIAO?REGIAO.titulo():"Tocar por região";}
   else if(v==="identificar"){t=window.IDENT?IDENT.titulo():"Identificar acorde";}
   else if(v==="curiosidades"){t=window.CURIOS?CURIOS.titulo():"Curiosidades";}
   else if(v==="professor"){t=CFG.professor?`Shapes de ${CFG.professor}`:"Shapes do professor";}
