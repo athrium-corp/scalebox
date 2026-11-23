@@ -501,3 +501,7 @@ input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
 /* seções e páginas centralizadas */
 .abas,.subabas{justify-content:center}
 @media (max-width:560px){.abas,.subabas{justify-content:flex-start}}
+/* seletor de idioma */
+.idioma{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+.idioma select{padding:7px 30px 7px 10px;font-size:13px}
+@media print{.idioma{display:none !important}}

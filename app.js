@@ -32,7 +32,7 @@ function preencherEscalas(sel,val){
 }
 function preencherTonicas(sel,val){sel.innerHTML=B.TONICAS.map(t=>`<option value="${t.n}">${E(nomeNota(t.n))}</option>`).join("");sel.value=val;}
 function preencherInstr(sel,val){sel.innerHTML=Object.entries(B.INSTRUMENTOS).map(([k,v])=>`<option value="${k}">${E(v.nome)}</option>`).join("");sel.value=B.INSTRUMENTOS[val]?val:"violao";}
-function nomeNota(n){const t=B.tonica(n);const solf=B.soletrar(t,"1",true);return `${solf} (${n})`;}
+function nomeNota(n){if(window.I18N&&I18N.lang==="en")return n;const t=B.tonica(n);const solf=B.soletrar(t,"1",true);return `${solf} (${n})`;}
 
 /* ---------- rótulos ---------- */
 const texto=(t,lb)=>rotulo==="int"?lb:B.soletrar(t,lb,rotulo==="solf");

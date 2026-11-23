@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Outfit:wght@700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="estilo.css">
+<script src="i18n.js"></script>
 </head>
 <body>
 <header class="topo">
@@ -28,6 +29,7 @@
       </div>
     </div>
     <div class="topo-ctl">
+      <label class="idioma" title="Idioma"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9" fill="none" stroke="currentColor" stroke-width="2"/></svg><select id="selIdioma" aria-label="Idioma"></select></label>
       <button class="btn btn-metro" id="btnMetro" aria-expanded="false" title="Abrir o metrônomo"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 3h6l4 18H5L9 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 15l5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Metrônomo</button>
       <button class="btn" id="btnImprimir" title="Imprimir ou salvar em PDF a aba atual">Imprimir / PDF</button>
       <span class="mini">Rótulos</span>

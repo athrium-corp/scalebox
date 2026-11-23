@@ -1,7 +1,7 @@
 /* Teoria musical e desenho do braço. Não precisa editar este arquivo. */
 (function(){
 const LETRAS=["C","D","E","F","G","A","B"];
-const SOLF=["Dó","Ré","Mi","Fá","Sol","Lá","Si"];
+const SOLF=({es:["Do","Re","Mi","Fa","Sol","La","Si"],en:["Do","Re","Mi","Fa","Sol","La","Si"],fr:["Do","Ré","Mi","Fa","Sol","La","Si"],ja:["ド","レ","ミ","ファ","ソ","ラ","シ"]})[(window.I18N||{}).lang]||["Dó","Ré","Mi","Fá","Sol","Lá","Si"];
 const LPC=[0,2,4,5,7,9,11];
 const TONICAS=[["C",0,0],["C#",1,0],["Db",1,1],["D",2,1],["Eb",3,2],["E",4,2],["F",5,3],["F#",6,3],["Gb",6,4],["G",7,4],["Ab",8,5],["A",9,5],["Bb",10,6],["B",11,6]]
   .map(([n,pc,l])=>({n,pc,l}));
