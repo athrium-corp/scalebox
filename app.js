@@ -395,7 +395,7 @@ function atualizarSelectsEscala(){
 }
 
 /* ---------- navegação ---------- */
-const VIEWS=["curiosidades","escalas","familias","harmonia","acordes","campo","regiao","arpejos","caged","identificar","professor","editor"];
+const VIEWS=["escalas","familias","harmonia","acordes","campo","regiao","arpejos","caged","identificar","desafio","professor","editor"];
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
   let v=location.hash.slice(1); if(!VIEWS.includes(v)) v="escalas";
@@ -408,7 +408,6 @@ function rota(){
 function renderAtual(v){
   v=v||location.hash.slice(1)||"escalas";
   if(v==="escalas") renderEscalas();
-  else if(v==="curiosidades") window.CURIOS&&CURIOS.render();
   else if(v==="familias") renderFamilias();
   else if(v==="harmonia") window.HARMONIA&&HARMONIA.render();
   else if(v==="acordes") window.ACORDES&&ACORDES.render();
@@ -417,6 +416,7 @@ function renderAtual(v){
   else if(v==="caged"){renderCaged(CAGED_MAIOR,"cMaj","cTblM",false);renderCaged(CAGED_MENOR,"cMin","cTblm",true);window.ACORDES&&ACORDES.renderCaged();}
   else if(v==="identificar") window.IDENT&&IDENT.render();
   else if(v==="regiao") window.REGIAO&&REGIAO.render();
+  else if(v==="desafio") window.DESAFIO&&DESAFIO.render();
   else if(v==="professor") renderProfessor();
   else if(v==="editor") renderEditor();
   else renderEscalas();
@@ -484,6 +484,7 @@ function iniciar(){
     if(window.ACORDES){preencherTonicas($("aTon"),"C");preencherTonicas($("chTon"),"C");preencherTonicas($("crTon"),"C");preencherTonicas($("arTon"),"C");ACORDES.iniciar(API);}
     if(window.IDENT) IDENT.iniciar(API);
     if(window.REGIAO) REGIAO.iniciar(API);
+    if(window.DESAFIO) DESAFIO.iniciar(API);
   }
   window.addEventListener("hashchange",rota);
   rota();
@@ -498,9 +499,9 @@ function prepararImpressao(){
   else if(v==="campo"){t=CAMPO.titulo();}
   else if(v==="arpejos"){t=ARPEJOS.titulo();}
   else if(v==="caged"){t=`CAGED · ${nomeNota($("cMaj").value)} maior e ${nomeNota($("cMin").value)} menor`;}
+  else if(v==="desafio"){t="Desafio do braço";}
   else if(v==="regiao"){t=window.REGIAO?REGIAO.titulo():"Tocar por região";}
   else if(v==="identificar"){t=window.IDENT?IDENT.titulo():"Identificar acorde";}
-  else if(v==="curiosidades"){t=window.CURIOS?CURIOS.titulo():"Curiosidades";}
   else if(v==="professor"){t=CFG.professor?`Shapes de ${CFG.professor}`:"Shapes do professor";}
   else if(v==="editor"){lerForm();t=ED.titulo||"Shape";}
   $("printTitulo").textContent=t;

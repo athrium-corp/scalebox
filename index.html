@@ -28,6 +28,7 @@
       </div>
     </div>
     <div class="topo-ctl">
+      <button class="btn btn-metro" id="btnMetro" aria-expanded="false" title="Abrir o metrônomo"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 3h6l4 18H5L9 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 15l5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Metrônomo</button>
       <button class="btn" id="btnImprimir" title="Imprimir ou salvar em PDF a aba atual">Imprimir / PDF</button>
       <span class="mini">Rótulos</span>
       <div class="seg" id="segRotulo" role="group" aria-label="Rótulo das bolinhas">
@@ -47,21 +48,14 @@
     <a href="#arpejos" data-v="arpejos">Arpejos</a>
     <a href="#caged" data-v="caged">CAGED</a>
     <a href="#identificar" data-v="identificar">Identificar acorde</a>
+    <a href="#desafio" data-v="desafio">Desafio do braço</a>
     <a href="#professor" data-v="professor">Shapes do professor</a>
     <a href="#editor" data-v="editor" id="abaEditor">Modo edição</a>
-    <a href="#curiosidades" data-v="curiosidades">Curiosidades</a>
   </nav>
 </header>
 
 <div class="print-cab wrap" id="printCab" aria-hidden="true"><strong>scale<span>box</span></strong><span id="printTitulo"></span></div>
 <main class="wrap">
-
-<!-- CURIOSIDADES -->
-<section class="view" id="v-curiosidades">
-  <p class="nota">Todo dia uma curiosidade nova sobre um grande guitarrista, com um vídeo e um tema do site para estudar. Volte amanhã para a próxima.</p>
-  <div id="curOut"></div>
-</section>
-
 
 <!-- ESCALAS -->
 <section class="view" id="v-escalas">
@@ -169,12 +163,29 @@
   <div class="controls">
     <label>Instrumento <select id="idInstr"></select></label>
     <label>Tablatura <input id="idTab" class="mono" placeholder="ex.: x32010" autocomplete="off" spellcheck="false" style="width:9em"></label>
+    <button class="btn primario" id="idOuvir">▶ Ouvir</button>
     <button class="btn" id="idLimpar">Limpar</button>
     <span class="id-ex" id="idEx"><span class="mini">Exemplos</span><button class="link" data-t="x32010">C</button><button class="link" data-t="3x443x">G7M</button><button class="link" data-t="x7678x">E7(#9)</button><button class="link" data-t="x-x-7-5-6-x">Fragmento</button><button class="link" data-t="x-x-x-9-10-x">Double stop</button></span>
   </div>
   <p class="nota">Marque as casas no braço (uma nota por corda) ou digite a tablatura da corda mais grave para a mais aguda. O site diz que acorde é, o que o caracteriza e com que outros nomes as mesmas notas podem ser lidas.</p>
   <div class="ed-board id-board" id="idBoard"></div>
   <div id="idOut" class="hconteudo"></div>
+</section>
+
+<!-- DESAFIO DO BRAÇO -->
+<section class="view" id="v-desafio">
+  <div class="controls">
+    <div class="seg" id="dsModo" role="group" aria-label="Tipo de desafio">
+      <button data-v="achar" aria-pressed="true">Encontre a nota</button>
+      <button data-v="nomear" aria-pressed="false">Que nota é essa?</button>
+    </div>
+    <label>Casas <select id="dsCasas"><option value="0-5">0 a 5</option><option value="0-12" selected>0 a 12</option><option value="5-12">5 a 12</option><option value="0-15">0 a 15</option></select></label>
+    <label>Notas <select id="dsNotas"><option value="nat">Só naturais</option><option value="todas">Com ♯ e ♭</option></select></label>
+    <label>Tempo <select id="dsTempo"><option value="0">Livre</option><option value="60">60 segundos</option><option value="120">2 minutos</option></select></label>
+    <span class="ds-cordas" id="dsCordas"><span class="mini">Cordas</span></span>
+    <label class="chk"><input type="checkbox" id="dsSom" checked> Som</label>
+  </div>
+  <div id="dsOut" class="hconteudo"></div>
 </section>
 
 <!-- CAGED -->
@@ -320,11 +331,11 @@
     </div>
     <nav class="rodape-col" aria-label="Estudo">
       <h4>Estudo</h4>
-      <ul><li><a href="#escalas">Escalas</a></li><li><a href="#familias">Famílias de modos</a></li><li><a href="#harmonia">Harmonia</a></li><li><a href="#caged">CAGED</a></li><li><a href="#curiosidades">Curiosidades</a></li></ul>
+      <ul><li><a href="#escalas">Escalas</a></li><li><a href="#familias">Famílias de modos</a></li><li><a href="#harmonia">Harmonia</a></li><li><a href="#caged">CAGED</a></li></ul>
     </nav>
     <nav class="rodape-col" aria-label="Acordes e professor">
       <h4>Acordes</h4>
-      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#regiao">Tocar por região</a></li><li><a href="#arpejos">Arpejos</a></li><li><a href="#identificar">Identificar acorde</a></li><li><a href="#professor">Shapes do professor</a></li></ul>
+      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#regiao">Tocar por região</a></li><li><a href="#arpejos">Arpejos</a></li><li><a href="#identificar">Identificar acorde</a></li><li><a href="#desafio">Desafio do braço</a></li><li><a href="#professor">Shapes do professor</a></li></ul>
     </nav>
   </div>
   <div class="wrap rodape-base"><span id="rodapeCopy">© Scalebox</span><span id="rodapeSite">scalebox.app.br</span></div>
@@ -335,13 +346,14 @@
 <script src="escalas.js"></script>
 <script src="escalas-extra.js"></script>
 <script src="shapes.js"></script>
-<script src="curiosidades.js"></script>
 <script src="braco.js"></script>
 <script src="harmonia.js"></script>
 <script src="acordes.js"></script>
+<script src="som.js"></script>
+<script src="metronomo.js"></script>
 <script src="regiao.js"></script>
+<script src="desafio.js"></script>
 <script src="identificar.js"></script>
-<script src="curiosidade-dia.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

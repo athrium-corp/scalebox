@@ -161,27 +161,24 @@ function cardVoz(v,st,i,extra){
 }
 
 /* ---------- som ---------- */
-let ctx=null;
-function tocarAcorde(v,t0,dur){
-  const f=m=>440*Math.pow(2,(m-69)/12);
-  v.notas.map(n=>n.midi).sort((a,b)=>a-b).forEach((m,k)=>{
-    const t=t0+k*.035, o=ctx.createOscillator(), o2=ctx.createOscillator(), gn=ctx.createGain(), lp=ctx.createBiquadFilter();
-    o.type="triangle";o2.type="sine";o.frequency.value=f(m);o2.frequency.value=f(m)*2;
-    lp.type="lowpass";lp.frequency.setValueAtTime(3200,t);lp.frequency.exponentialRampToValueAtTime(900,t+dur);
-    gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(.16,t+.01);gn.gain.exponentialRampToValueAtTime(.001,t+dur);
-    const g2=ctx.createGain();g2.gain.value=.25;o2.connect(g2);g2.connect(gn);
-    o.connect(gn);gn.connect(lp);lp.connect(ctx.destination);o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05);
-  });
-}
 function ouvir(seq){
-  if(tocando){clearTimeout(tocando.fim);tocando.timers.forEach(clearTimeout);document.querySelectorAll(".rg-card.on").forEach(x=>x.classList.remove("on"));tocando=null;$("rgPlay").textContent="▶ Ouvir";return;}
-  ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
-  if(ctx.state==="suspended") ctx.resume();
-  const bpm=+$("rgBpm").value, dur=60/bpm*4, t0=ctx.currentTime+.1, timers=[];
+  if(tocando){clearTimeout(tocando.fim);tocando.timers.forEach(clearTimeout);SOM.encerrar(tocando.ses);document.querySelectorAll(".rg-card.on").forEach(x=>x.classList.remove("on"));tocando=null;$("rgPlay").textContent="▶ Ouvir";return;}
+  if(!seq.length) return;
+  SOM.preparar(seq.flatMap(v=>v?v.notas.map(n=>n.midi):[]));
+  const bpm=+$("rgBpm").value, beat=60/bpm, dur=beat*4, t0=SOM.agora()+.15, timers=[];
+  const ritmo=$("rgRitmo").value;
   const cards=[...document.querySelectorAll("#rgProg .rg-card")];
-  seq.forEach((v,i)=>{if(!v)return;tocarAcorde(v,t0+i*dur,dur*.95);
-    timers.push(setTimeout(()=>{cards.forEach(c=>c.classList.remove("on"));cards[i]&&cards[i].classList.add("on");},(i*dur+.1)*1000));});
-  tocando={timers,fim:setTimeout(()=>{cards.forEach(c=>c.classList.remove("on"));tocando=null;$("rgPlay").textContent="▶ Ouvir";},(seq.length*dur+.2)*1000)};
+  const ses=SOM.sessao(); let prev=null;
+  seq.forEach((v,i)=>{if(!v)return;const ms=v.notas.map(n=>n.midi),t=t0+i*dur;
+    if(ritmo==="dedilhado"){ // arpejo: cada nota numa colcheia
+      const ord=[...ms].sort((a,b)=>a-b), seqN=[...ord,...ord.slice(1,-1).reverse()];
+      for(let k=0;k<8;k++) SOM.nota(seqN[k%seqN.length],t+k*beat/2,{vel:.7,destino:ses});
+    } else if(ritmo==="batida"){ // baixo, cima, cima-baixo-cima
+      [[0,1],[1,.6],[1.5,.5],[2,.9],[2.5,.5],[3,.7],[3.5,.5]].forEach(([b,vel],k)=>{const desce=k%2===0;
+        SOM.acorde(desce?ms:[...ms].reverse(),t+b*beat,{vel,espaco:desce?.014:.010,dur:beat*.55,destino:ses});});
+    } else { if(prev)SOM.abafar(prev,t-.02); prev=SOM.acorde(ms,t,{vel:.85,destino:ses}); }
+    timers.push(setTimeout(()=>{cards.forEach(c=>c.classList.remove("on"));cards[i]&&cards[i].classList.add("on");},(t-SOM.agora())*1000));});
+  tocando={ses,timers,fim:setTimeout(()=>{cards.forEach(c=>c.classList.remove("on"));SOM.encerrar(ses);tocando=null;$("rgPlay").textContent="▶ Ouvir";},(seq.length*dur+2)*1000)};
   $("rgPlay").textContent="■ Parar";
 }
 
@@ -211,7 +208,7 @@ function render(){
   h+=`<section class="card"><div class="rg-prog-cab"><span class="eyebrow">Progressão</span>
       <div class="rg-presets">${C.presets.map(([n,p])=>`<button class="chip-b${p.join()===prog.join()?" on":""}" data-p="${p.join()}">${E(n)}</button>`).join("")}</div>
       <div class="rg-graus"><span class="mini">Monte a sua:</span>${acs.map((a,i)=>`<button class="chip-b" data-g="${i}" title="Adicionar ${E(a.raiz.n+(st.tet?a.tet.suf:a.tri.suf))}">${E(a.rom)}</button>`).join("")}<button class="link" id="rgLimpaProg">limpar</button></div>
-      <div class="rg-play"><button class="btn primario" id="rgPlay">▶ Ouvir</button><label>Andamento <select id="rgBpm">${[60,72,84,96,110,124].map(b=>`<option${b===84?" selected":""}>${b}</option>`).join("")}</select></label><span class="nota">Um acorde por compasso.</span></div></div>`;
+      <div class="rg-play"><button class="btn primario" id="rgPlay">▶ Ouvir</button><label>Andamento <select id="rgBpm">${[60,72,84,96,110,124].map(b=>`<option${b===84?" selected":""}>${b}</option>`).join("")}</select></label><label>Ritmo <select id="rgRitmo"><option value="sustenido">Acorde soando</option><option value="dedilhado">Dedilhado</option><option value="batida">Batida</option></select></label><span class="nota">Um acorde por compasso.</span></div></div>`;
   seqAtual=prog.length?melhorCaminho(prog.map(i=>cands[i])):[];
   h+=prog.length?`<div class="ac-grid rg-grid" id="rgProg">${seqAtual.map((v,i)=>cardVoz(v,st,i)).join("")}</div>`:`<p class="aviso">Escolha uma progressão pronta ou clique nos graus para montar a sua.</p>`;
   h+=`</section>`;

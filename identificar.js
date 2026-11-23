@@ -230,6 +230,7 @@ function iniciar(api){
   sel.innerHTML=Object.entries(B.INSTRUMENTOS).map(([k,v])=>`<option value="${k}">${E(v.nome)}</option>`).join("");
   sel.value=instr;
   sel.onchange=()=>{instr=sel.value;marc={};escolha=0;render();};
+  $("idOuvir").onclick=()=>{const n=notasMarcadas();if(n.length&&window.SOM)SOM.acorde(n.map(x=>x.midi),SOM.agora()+.03,{espaco:.03});};
   $("idLimpar").onclick=()=>{marc={};escolha=0;$("idTab").value="";render();};
   $("idTab").oninput=()=>{const v=$("idTab").value;if(!v.trim()){marc={};render();return;}if(lerTab(v)){$("idTab").classList.remove("erro");render();}else $("idTab").classList.add("erro");};
   document.querySelectorAll("#idEx button").forEach(b=>b.onclick=()=>{instr="violao";sel.value="violao";lerTab(b.dataset.t);$("idTab").value=b.dataset.t;render();});
