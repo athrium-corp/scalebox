@@ -4,16 +4,29 @@
 (function(){
 const LANGS={pt:"Português",en:"English",es:"Español",fr:"Français",ja:"日本語"};
 const params=new URLSearchParams(location.search);
-let lang=params.get("lang");
-if(!LANGS[lang]){try{lang=localStorage.getItem("scalebox.lang");}catch(e){}}
-if(!LANGS[lang]){const nav=(navigator.languages||[navigator.language||"pt"]).map(x=>String(x).slice(0,2).toLowerCase());lang=nav.find(x=>LANGS[x])||"pt";}
-document.documentElement.lang=lang==="pt"?"pt-BR":lang;
+const DE=document.documentElement, daPagina=DE.getAttribute("data-lang");
+let salvo=null; try{salvo=localStorage.getItem("scalebox.lang");}catch(e){}
+const doNavegador=()=>{const nav=(navigator.languages||[navigator.language||"pt"]).map(x=>String(x).slice(0,2).toLowerCase());return nav.find(x=>LANGS[x])||"pt";};
+// endereço equivalente desta página em outro idioma (links hreflang gerados pelo build)
+const alternativa=l=>{const a=document.querySelector(`link[rel="alternate"][hreflang="${l==="pt"?"pt-BR":l}"]`);if(!a)return null;try{return new URL(a.getAttribute("href")).pathname;}catch(e){return a.getAttribute("href");}};
+let lang;
+if(LANGS[daPagina]){
+  // site publicado: cada idioma tem seu endereço. Só a página inicial em português leva o visitante ao idioma dele.
+  lang=daPagina;
+  const robo=/bot|crawl|spider|slurp|lighthouse|preview|google|bing/i.test(navigator.userAgent||"");
+  if(DE.hasAttribute("data-inicio")&&!robo&&!params.has("lang")){const quer=LANGS[salvo]?salvo:doNavegador();if(quer!==lang){const u=alternativa(quer);if(u){location.replace(u+location.hash);}}}
+}else{
+  lang=params.get("lang");
+  if(!LANGS[lang]) lang=salvo;
+  if(!LANGS[lang]) lang=doNavegador();
+}
+DE.lang=lang==="pt"?"pt-BR":lang;
 const coletar=params.has("i18n");
 const dict={}, pats=[], faltando=new Map(), feitos=new Set(); // feitos: textos já traduzidos (não traduz de novo)
 const I=window.I18N={lang,LANGS,dict,pats,faltando,
   add(obj){Object.assign(dict,obj);},
   addPat(list){pats.push(...list);},
-  set(l){try{localStorage.setItem("scalebox.lang",l);}catch(e){} const u=new URL(location.href);u.searchParams.delete("lang");location.href=u.toString();},
+  set(l){try{localStorage.setItem("scalebox.lang",l);}catch(e){} const alt=daPagina&&alternativa(l); if(alt){location.href=alt+location.hash;return;} const u=new URL(location.href);u.searchParams.delete("lang");location.href=u.toString();},
   t, tr};
 window.t=t;
 // carrega o dicionário do idioma antes dos outros scripts

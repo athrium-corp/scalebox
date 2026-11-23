@@ -59,7 +59,8 @@ function cordasTonica(ins){const n=ins.midi.length;return n>=6?[0,1,2]:[0,1];}
 function renderEscalas(){
   const e=escala($("eEscala").value), t=B.tonica($("eTonica").value), ins=B.INSTRUMENTOS[$("eInstr").value];
   const notas=e.lbs.map(lb=>`<b>${E(B.soletrar(t,lb,rotulo==="solf"))}</b>`).join("");
-  $("eInfo").innerHTML=`<div class="cab"><h2>${E(e.nome)}</h2>${e.outros?`<span class="alias">${E(e.outros)}</span>`:""}</div>
+  const hN=window.SB_INICIO&&SB_INICIO.sel&&SB_INICIO.sel.eEscala===e.id?"h1":"h2";
+  $("eInfo").innerHTML=`<div class="cab"><${hN} class="tit-escala">${E(e.nome)}</${hN}>${e.outros?`<span class="alias">${E(e.outros)}</span>`:""}</div>
     <div><h4>Fórmula</h4><div class="formula">${chips(e)}</div></div>
     <div><h4>Notas em ${E(nomeNota(t.n))}</h4><div class="formula notas">${notas}</div></div>
     ${e.caract.length?`<div><h4>Característico</h4><p><strong style="color:var(--char);font-family:var(--f-mono)">${E(e.caract.join(" e "))}</strong></p></div>`:""}
@@ -399,7 +400,7 @@ const VIEWS=["escalas","familias","harmonia","acordes","campo","regiao","arpejos
 const SECAO={"escalas": "escalas", "familias": "escalas", "caged": "escalas", "acordes": "acordes", "arpejos": "acordes", "identificar": "acordes", "harmonia": "harmonia", "campo": "harmonia", "regiao": "pratica", "desafio": "pratica", "professor": "professor", "editor": "professor"};
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
-  let v=location.hash.slice(1); if(!VIEWS.includes(v)) v="escalas";
+  let v=location.hash.slice(1)||(window.SB_INICIO&&SB_INICIO.v); if(!VIEWS.includes(v)) v="escalas";
   if(v==="editor") store.set("editorDesbloqueado",true);
   $("abaEditor").hidden=!editorVisivel();
   VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v;});
@@ -410,7 +411,7 @@ function rota(){
   renderAtual(v);
 }
 function renderAtual(v){
-  v=v||location.hash.slice(1)||"escalas";
+  v=v||location.hash.slice(1)||(window.SB_INICIO&&SB_INICIO.v)||"escalas";
   if(v==="escalas") renderEscalas();
   else if(v==="familias") renderFamilias();
   else if(v==="harmonia") window.HARMONIA&&HARMONIA.render();
@@ -429,7 +430,7 @@ function renderSeg(){document.querySelectorAll("#segRotulo button").forEach(b=>b
 
 /* ---------- início ---------- */
 function iniciar(){
-  document.title=CFG.titulo; {const m=/^(.*?)(box)$/i.exec(CFG.titulo);$("tituloSite").innerHTML=m?`${E(m[1])}<span class="box">${E(m[2])}</span>`:E(CFG.titulo);} $("subtitulo").textContent=CFG.subtitulo||"";
+  if(!window.SB_INICIO) document.title=CFG.titulo; {const m=/^(.*?)(box)$/i.exec(CFG.titulo);$("tituloSite").innerHTML=m?`${E(m[1])}<span class="box">${E(m[2])}</span>`:E(CFG.titulo);} $("subtitulo").textContent=CFG.subtitulo||"";
   $("rodapeCopy").textContent=`© ${new Date().getFullYear()} ${CFG.titulo}`+(CFG.professor?` · Material de ${CFG.professor}`:"");
   $("rodapeSite").textContent=CFG.site||"scalebox.app.br";
   compilar();
@@ -490,11 +491,14 @@ function iniciar(){
     if(window.REGIAO) REGIAO.iniciar(API);
     if(window.DESAFIO) DESAFIO.iniciar(API);
   }
+  // páginas geradas para o Google (ex.: /escalas/dorico/) já abrem na aba e nas opções certas
+  if(window.SB_INICIO&&SB_INICIO.sel) for(const [id,val] of Object.entries(SB_INICIO.sel)){const el=$(id);if(el&&[...el.options].some(o=>o.value===val))el.value=val;}
   window.addEventListener("hashchange",rota);
   rota();
+  if(window.SB_INICIO&&SB_INICIO.alvo&&!location.hash) setTimeout(()=>{const el=$(SB_INICIO.alvo);if(el)el.scrollIntoView({block:"start"});},60);
 }
 function prepararImpressao(){
-  const v=location.hash.slice(1)||"escalas", ins=id=>B.INSTRUMENTOS[$(id).value].nome;
+  const v=location.hash.slice(1)||(window.SB_INICIO&&SB_INICIO.v)||"escalas", ins=id=>B.INSTRUMENTOS[$(id).value].nome;
   let t="";
   if(v==="escalas"){const e=escala($("eEscala").value);t=`${nomeNota($("eTonica").value)} · ${e.nome} · ${ins("eInstr")}`;}
   else if(v==="familias"){const f=familias().find(x=>x.id===$("fFam").value);t=`${f?f.nome:"Famílias de modos"} · ${ins("fInstr")}`;}

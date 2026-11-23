@@ -505,3 +505,20 @@ input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
 .idioma{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
 .idioma select{padding:7px 30px 7px 10px;font-size:13px}
 @media print{.idioma{display:none !important}}
+
+/* lista de escalas e tons no rodapé (páginas publicadas) */
+.rodape-links{display:grid;grid-template-columns:2fr 1fr;gap:24px;padding-block:4px 24px;border-top:1px solid var(--linha-suave,var(--line))}
+.rodape-links h4{margin:18px 0 10px;font:600 11px var(--f-body);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.rodape-links ul{list-style:none;margin:0;padding:0;columns:3 150px;column-gap:20px}
+.rodape-links nav:last-child ul{columns:2 120px}
+.rodape-links li{break-inside:avoid;margin:0 0 5px}
+.rodape-links a{color:var(--muted);text-decoration:none;font-size:13px}
+.rodape-links a:hover{color:var(--accent)}
+@media (max-width:760px){.rodape-links{grid-template-columns:1fr}}
+@media print{.rodape-links{display:none}}
+/* nas páginas de escala o nome vira o título principal (h1) e a marca do topo vira texto */
+.info h1.tit-escala{font-family:"Outfit",var(--f-body);font-weight:700;letter-spacing:-.02em;font-size:clamp(32px,5vw,46px);line-height:1;margin:0}
+.marca p.marca-nome{color:var(--fg);font-family:"Outfit",var(--f-body);font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1;margin:0;letter-spacing:-.02em;text-transform:lowercase}
+.marca .marca-nome .box{color:var(--accent)}
+@media print{.info h1.tit-escala{font-size:24pt}}
+@media (max-width:560px){.controls label{min-width:0;max-width:100%}.controls select{max-width:100%;min-width:0}}
