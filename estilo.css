@@ -522,3 +522,26 @@ input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
 .marca .marca-nome .box{color:var(--accent)}
 @media print{.info h1.tit-escala{font-size:24pt}}
 @media (max-width:560px){.controls label{min-width:0;max-width:100%}.controls select{max-width:100%;min-width:0}}
+
+/* Ciclos (quintas, quartas e outros) */
+.ci-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center}
+.ci-roda{max-width:520px;width:100%;justify-self:center}
+.ci-svg{width:100%;height:auto;display:block}
+.ci-svg .ci-no circle{transition:transform .15s,fill .15s}
+.ci-svg .ci-no:hover circle{stroke:var(--accent)}
+.ci-svg .ci-no.atual circle{fill:var(--char);stroke:var(--char)}
+.ci-svg .ci-no.atual text{fill:#fff}
+.ci-info{display:flex;flex-direction:column;gap:14px}
+.ci-uso{margin:6px 0 0;line-height:1.55}
+.ci-titulo{font-family:"Outfit",var(--f-body);font-size:clamp(28px,4.5vw,42px);letter-spacing:-.02em}
+.ci-seq{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.ci-passo{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:12px 14px;border-radius:var(--r,12px);background:var(--chip);border:1px solid transparent;transition:background .15s,border-color .15s,transform .15s}
+.ci-passo b{font-size:22px}
+.ci-passo .ci-n{font:600 11px var(--f-body);color:var(--muted)}
+.ci-passo .ci-acs{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px}
+.ci-passo.volta{opacity:.6}
+.ci-passo.on{background:var(--tinta-acento,var(--chip));border-color:var(--accent);transform:translateY(-2px)}
+.ci-passo.on b{color:var(--accent)}
+.ci-play{justify-content:flex-start}
+@media (max-width:860px){.ci-grid{grid-template-columns:1fr}}
+@media print{.ci-play{display:none}.ci-grid{grid-template-columns:1fr 1fr}}

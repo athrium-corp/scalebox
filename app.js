@@ -396,14 +396,15 @@ function atualizarSelectsEscala(){
 }
 
 /* ---------- navegação ---------- */
-const VIEWS=["escalas","familias","harmonia","acordes","campo","regiao","arpejos","caged","identificar","desafio","professor","editor"];
-const SECAO={"escalas": "escalas", "familias": "escalas", "caged": "escalas", "acordes": "acordes", "arpejos": "acordes", "identificar": "acordes", "harmonia": "harmonia", "campo": "harmonia", "regiao": "pratica", "desafio": "pratica", "professor": "professor", "editor": "professor"};
+const VIEWS=["escalas","familias","harmonia","acordes","campo","ciclos","regiao","arpejos","caged","identificar","desafio","professor","editor"];
+const SECAO={"escalas": "escalas", "familias": "escalas", "caged": "escalas", "acordes": "acordes", "arpejos": "acordes", "identificar": "acordes", "harmonia": "harmonia", "campo": "harmonia", "ciclos": "harmonia", "regiao": "pratica", "desafio": "pratica", "professor": "professor", "editor": "professor"};
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
   let v=location.hash.slice(1)||(window.SB_INICIO&&SB_INICIO.v); if(!VIEWS.includes(v)) v="escalas";
   if(v==="editor") store.set("editorDesbloqueado",true);
   $("abaEditor").hidden=!editorVisivel();
   VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v;});
+  if(v!=="ciclos"&&window.CICLOS) CICLOS.parar();
   const sec=SECAO[v]||"escalas"; store.set("ultima."+sec,v);
   document.querySelectorAll(".abas a").forEach(a=>{a.classList.toggle("ativa",a.dataset.s===sec);const u=store.get("ultima."+a.dataset.s,null);if(u&&SECAO[u]===a.dataset.s&&(u!=="editor"||editorVisivel()))a.href="#"+u;});
   document.querySelectorAll(".sub-grupo").forEach(g=>{g.hidden=g.dataset.sec!==sec;});
@@ -417,6 +418,7 @@ function renderAtual(v){
   else if(v==="harmonia") window.HARMONIA&&HARMONIA.render();
   else if(v==="acordes") window.ACORDES&&ACORDES.render();
   else if(v==="campo") window.CAMPO&&CAMPO.render();
+  else if(v==="ciclos") window.CICLOS&&CICLOS.render();
   else if(v==="arpejos") window.ARPEJOS&&ARPEJOS.render();
   else if(v==="caged"){renderCaged(CAGED_MAIOR,"cMaj","cTblM",false);renderCaged(CAGED_MENOR,"cMin","cTblm",true);window.ACORDES&&ACORDES.renderCaged();}
   else if(v==="identificar") window.IDENT&&IDENT.render();
@@ -488,6 +490,7 @@ function iniciar(){
     HARMONIA.iniciar(API);
     if(window.ACORDES){preencherTonicas($("aTon"),"C");preencherTonicas($("chTon"),"C");preencherTonicas($("crTon"),"C");preencherTonicas($("arTon"),"C");ACORDES.iniciar(API);}
     if(window.IDENT) IDENT.iniciar(API);
+    if(window.CICLOS) CICLOS.iniciar(API);
     if(window.REGIAO) REGIAO.iniciar(API);
     if(window.DESAFIO) DESAFIO.iniciar(API);
   }
@@ -505,6 +508,7 @@ function prepararImpressao(){
   else if(v==="harmonia"){t=HARMONIA.titulo();}
   else if(v==="acordes"){t=ACORDES.titulo();}
   else if(v==="campo"){t=CAMPO.titulo();}
+  else if(v==="ciclos"){t=window.CICLOS?CICLOS.titulo():"Ciclos";}
   else if(v==="arpejos"){t=ARPEJOS.titulo();}
   else if(v==="caged"){t=`CAGED · ${nomeNota($("cMaj").value)} maior e ${nomeNota($("cMin").value)} menor`;}
   else if(v==="desafio"){t="Desafio do braço";}

@@ -38,6 +38,7 @@ function contexto(lang) {
   vm.runInContext(ler("i18n.js"), ctx);
   if (lang !== "pt") vm.runInContext(ler(`i18n-${lang}.js`), ctx);
   vm.runInContext(ler("escalas.js"), ctx);
+  try { ctx.BRACO = {}; vm.runInContext(ler("ciclos.js"), ctx); } catch (e) { }
   try { vm.runInContext(ler("escalas-extra.js"), ctx); } catch (e) { ctx.ESCALAS_EXTRA = []; }
   return ctx;
 }
@@ -57,6 +58,7 @@ const ABAS = {           // aba do app → endereço em cada idioma
   harmonia:    { pt: "teoria-musical", en: "music-theory", es: "teoria-musical", fr: "theorie-musicale", ja: "music-theory" },
   campo:       { pt: "campo-harmonico", en: "harmonic-field", es: "campo-armonico", fr: "champ-harmonique", ja: "harmonic-field" },
   regiao:      { pt: "tocar-por-regiao", en: "play-by-region", es: "tocar-por-region", fr: "jouer-par-region", ja: "play-by-region" },
+  ciclos:      { pt: "ciclos", en: "cycles", es: "ciclos", fr: "cycles", ja: "cycles" },
   desafio:     { pt: "desafio-do-braco", en: "fretboard-challenge", es: "desafio-del-mastil", fr: "defi-du-manche", ja: "fretboard-challenge" },
 };
 const PASTA_ESC = { pt: "escalas", en: "scales", es: "escalas", fr: "gammes", ja: "scales" };
@@ -73,6 +75,8 @@ const TXT = {
     harmonia: ["Teoria musical: intervalos, campo harmônico, cadências e progressões", "Do básico ao avançado: intervalos, formação de acordes, campo harmônico, funções, cadências, dominantes secundários, SubV e empréstimo modal."],
     campo: ["Campo harmônico de qualquer acorde", "Escolha um acorde e veja o campo harmônico montado com a mesma estrutura, os acordes relativos e as tríades que cabem dentro dele."],
     regiao: ["Tocar por região: campo harmônico sem sair do lugar no braço", "Todos os acordes do tom dentro de 5 casas, nas inversões que deixam a mão quase parada. Estilo animado (inversões) ou worship (fragmentos), com áudio."],
+    ciclos: ["Ciclos musicais: ciclo das quintas, das quartas e outros", "Ciclo das quintas e das quartas com armaduras e relativos menores, além dos ciclos cromático, de tons inteiros, de terças e de trítonos. Com sequência para praticar e áudio."],
+    ciclo: (n) => `${n}: o que é, para que serve e como praticar`,
     desafio: ["Desafio do braço: decore as notas da guitarra e do violão", "Treino para memorizar onde está cada nota no braço. Encontre a nota ou diga qual é, com placar, tempo e níveis do básico ao avançado."],
     escala: (n, f) => [`${n}: escala no braço da guitarra e do violão, fórmula e posições`, `${n}: fórmula ${f}. `],
     tom: (n) => [`Campo harmônico de ${n}: acordes, funções e cadências`, `Os acordes do campo harmônico de ${n} em tríades, tétrades e com tensões, com funções, cadências, progressões e tons vizinhos.`],
@@ -86,6 +90,8 @@ const TXT = {
     harmonia: ["Music theory: intervals, harmonic field, cadences and progressions", "From basic to advanced: intervals, chord construction, diatonic chords, functions, cadences, secondary dominants, tritone substitution and modal interchange."],
     campo: ["Harmonic field of any chord", "Pick a chord and see the harmonic field built with the same structure, its relative chords and the triads that fit inside it."],
     regiao: ["Play by region: diatonic chords without leaving your spot on the neck", "Every chord in the key inside 5 frets, in the inversions that keep your hand almost still. Upbeat (inversions) or worship (fragments) style, with audio."],
+    ciclos: ["Music cycles: circle of fifths, cycle of fourths and more", "The circle of fifths and cycle of fourths with key signatures and relative minors, plus the chromatic, whole-step, third and tritone cycles. With a practice sequence and audio."],
+    ciclo: (n) => `${n}: what it is, what it's for and how to practice it`,
     desafio: ["Fretboard challenge: memorize the notes on the guitar neck", "A trainer to learn where every note is on the neck. Find the note or name it, with score, timer and levels from basic to advanced."],
     escala: (n, f) => [`${n} scale on guitar: formula, notes and positions`, `${n}: formula ${f}. `],
     tom: (n) => [`${n} harmonic field: diatonic chords, functions and cadences`, `The diatonic chords of ${n} as triads, seventh chords and with tensions, with functions, cadences, progressions and neighboring keys.`],
@@ -99,6 +105,8 @@ const TXT = {
     harmonia: ["Teoría musical: intervalos, campo armónico, cadencias y progresiones", "De lo básico a lo avanzado: intervalos, formación de acordes, campo armónico, funciones, cadencias, dominantes secundarios, SubV y préstamo modal."],
     campo: ["Campo armónico de cualquier acorde", "Elige un acorde y mira el campo armónico armado con la misma estructura, los acordes relativos y las tríadas que caben dentro de él."],
     regiao: ["Tocar por región: el campo armónico sin moverte del mástil", "Todos los acordes del tono dentro de 5 trastes, en las inversiones que dejan la mano casi quieta. Estilo animado (inversiones) o worship (fragmentos), con audio."],
+    ciclos: ["Ciclos musicales: círculo de quintas, ciclo de cuartas y más", "El círculo de quintas y el ciclo de cuartas con armaduras y relativos menores, además de los ciclos cromático, de tonos enteros, de terceras y de tritonos. Con secuencia para practicar y audio."],
+    ciclo: (n) => `${n}: qué es, para qué sirve y cómo practicarlo`,
     desafio: ["Desafío del mástil: memoriza las notas de la guitarra", "Entrenamiento para memorizar dónde está cada nota en el mástil. Encuentra la nota o di cuál es, con marcador, tiempo y niveles."],
     escala: (n, f) => [`${n}: escala en la guitarra, fórmula, notas y posiciones`, `${n}: fórmula ${f}. `],
     tom: (n) => [`Campo armónico de ${n}: acordes, funciones y cadencias`, `Los acordes del campo armónico de ${n} en tríadas, cuatríadas y con tensiones, con funciones, cadencias, progresiones y tonos vecinos.`],
@@ -112,6 +120,8 @@ const TXT = {
     harmonia: ["Théorie musicale : intervalles, champ harmonique, cadences et progressions", "Du niveau débutant à avancé : intervalles, construction des accords, champ harmonique, fonctions, cadences, dominantes secondaires, substitution tritonique et emprunt modal."],
     campo: ["Champ harmonique de n'importe quel accord", "Choisissez un accord et voyez le champ harmonique construit avec la même structure, les accords relatifs et les triades qu'il contient."],
     regiao: ["Jouer par région : le champ harmonique sans bouger sur le manche", "Tous les accords de la tonalité dans 5 cases, dans les renversements qui gardent la main presque immobile. Style entraînant ou worship, avec audio."],
+    ciclos: ["Cycles musicaux : cycle des quintes, des quartes et autres", "Le cycle des quintes et des quartes avec armures et relatifs mineurs, ainsi que les cycles chromatique, par tons, par tierces et par tritons. Avec séquence à travailler et audio."],
+    ciclo: (n) => `${n} : ce que c'est, à quoi ça sert et comment le travailler`,
     desafio: ["Défi du manche : mémorisez les notes de la guitare", "Un entraînement pour retenir où se trouve chaque note sur le manche. Trouvez la note ou nommez-la, avec score, chrono et niveaux."],
     escala: (n, f) => [`${n} : gamme à la guitare, formule, notes et positions`, `${n} : formule ${f}. `],
     tom: (n) => [`Champ harmonique de ${n} : accords, fonctions et cadences`, `Les accords du champ harmonique de ${n} en triades, accords de septième et avec tensions, avec fonctions, cadences, progressions et tonalités voisines.`],
@@ -125,6 +135,8 @@ const TXT = {
     harmonia: ["音楽理論:音程、ダイアトニックコード、カデンツ、コード進行", "基礎から上級まで:音程、コードの構成、ダイアトニックコード、機能、カデンツ、セカンダリー・ドミナント、裏コード、モーダル・インターチェンジ。"],
     campo: ["あらゆるコードのダイアトニックコード", "コードを選ぶと、同じ構成で作ったダイアトニックコード、関係コード、含まれるトライアドを表示します。"],
     regiao: ["ポジション内で弾く:手を動かさずにダイアトニックコード", "キーのすべてのコードを5フレット内に、手がほとんど動かない転回形で。アップテンポ(転回形)またはワーシップ(フラグメント)、音声付き。"],
+    ciclos: ["音楽のサイクル:5度圏、4度サイクルなど", "調号と平行短調付きの5度圏と4度サイクル、クロマチック、全音、3度、トライトーンのサイクル。練習用シーケンスと音声付き。"],
+    ciclo: (n) => `${n}:仕組み・使い方・練習方法`,
     desafio: ["指板チャレンジ:ギターの音名を覚えよう", "指板上の音の位置を覚えるトレーニング。音を探す、または音名を答える。スコア、タイマー、レベル付き。"],
     escala: (n, f) => [`${n}スケール:ギター指板の構成音とポジション`, `${n}:構成式 ${f}。`],
     tom: (n) => [`${n}のダイアトニックコード:機能とカデンツ`, `${n}のダイアトニックコードをトライアド、4和音、テンション付きで。機能、カデンツ、コード進行、近親調も。`],
@@ -164,6 +176,13 @@ for (const e of ESCALAS) {
     return { url: PREFIXO(l) + PASTA_ESC[l] + "/" + s + "/", titulo: tit + " | Scalebox", desc: curto(ini + T(l, e.uso || e.origem || "")), nome };
   });
 }
+const CICLOS_LISTA = (CTX.pt.CICLOS && CTX.pt.CICLOS._teste.CICLOS) || [];
+for (const c of CICLOS_LISTA) {
+  pag("ciclo-" + c.id, "ciclos", { ciTipo: c.id }, l => {
+    const nome = T(l, c.nome);
+    return { url: PREFIXO(l) + ABAS.ciclos[l] + "/" + (slug(l === "ja" ? T("en", c.nome) : nome) || c.id) + "/", titulo: TXT[l].ciclo(nome) + " | Scalebox", desc: curto(T(l, c.oque) + " " + T(l, c.uso)), nome };
+  });
+}
 for (const [n, modo] of TONS) {
   pag(`tom-${n}-${modo}`, "harmonia", { hTon: n, hTipo: modo === "maior" ? "maior" : "menor" }, l => {
     const nome = nomeTom(l, n, modo), [tit, desc] = TXT[l].tom(nome);
@@ -178,11 +197,11 @@ const OG = l => url(`og-${l}.png`) || url("og-pt.png");
 const ICONE512 = url("icone-512.png"), ICONE180 = url("icone-180.png");
 
 function linksRodape(lang) {
-  const P = PAGINAS.filter(p => p.id.startsWith("esc-")), K = PAGINAS.filter(p => p.id.startsWith("tom-"));
+  const P = PAGINAS.filter(p => p.id.startsWith("esc-")), K = PAGINAS.filter(p => p.id.startsWith("tom-")), CI = PAGINAS.filter(p => p.id.startsWith("ciclo-"));
   const li = p => `<li><a href="${p.l[lang].url}">${esc(p.l[lang].nome)}</a></li>`;
   return `<div class="wrap rodape-links" data-sem-traducao>
   <nav aria-label="${esc(TXT[lang].todasEsc)}"><h4>${esc(TXT[lang].todasEsc)}</h4><ul>${P.map(li).join("")}</ul></nav>
-  <nav aria-label="${esc(TXT[lang].todosTons)}"><h4>${esc(TXT[lang].todosTons)}</h4><ul>${K.map(li).join("")}</ul></nav>
+  <nav aria-label="${esc(TXT[lang].todosTons)}"><h4>${esc(TXT[lang].todosTons)}</h4><ul>${K.map(li).join("")}</ul>${CI.length ? `<h4>${esc(TXT[lang].ciclos[0].split(/:| :/)[0])}</h4><ul class="ul-ciclos">${CI.map(li).join("")}</ul>` : ""}</nav>
 </div>`;
 }
 
