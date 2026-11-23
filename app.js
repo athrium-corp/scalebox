@@ -396,13 +396,17 @@ function atualizarSelectsEscala(){
 
 /* ---------- navegação ---------- */
 const VIEWS=["escalas","familias","harmonia","acordes","campo","regiao","arpejos","caged","identificar","desafio","professor","editor"];
+const SECAO={"escalas": "escalas", "familias": "escalas", "caged": "escalas", "acordes": "acordes", "arpejos": "acordes", "identificar": "acordes", "harmonia": "harmonia", "campo": "harmonia", "regiao": "pratica", "desafio": "pratica", "professor": "professor", "editor": "professor"};
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
   let v=location.hash.slice(1); if(!VIEWS.includes(v)) v="escalas";
   if(v==="editor") store.set("editorDesbloqueado",true);
   $("abaEditor").hidden=!editorVisivel();
   VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v;});
-  document.querySelectorAll(".abas a").forEach(a=>a.classList.toggle("ativa",a.dataset.v===v));
+  const sec=SECAO[v]||"escalas"; store.set("ultima."+sec,v);
+  document.querySelectorAll(".abas a").forEach(a=>{a.classList.toggle("ativa",a.dataset.s===sec);const u=store.get("ultima."+a.dataset.s,null);if(u&&SECAO[u]===a.dataset.s&&(u!=="editor"||editorVisivel()))a.href="#"+u;});
+  document.querySelectorAll(".sub-grupo").forEach(g=>{g.hidden=g.dataset.sec!==sec;});
+  document.querySelectorAll(".subabas a").forEach(a=>a.classList.toggle("ativa",a.dataset.v===v));
   renderAtual(v);
 }
 function renderAtual(v){

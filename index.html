@@ -39,18 +39,18 @@
     </div>
   </div>
   <nav class="abas wrap" aria-label="Seções">
-    <a href="#escalas" data-v="escalas">Escalas</a>
-    <a href="#familias" data-v="familias">Famílias de modos</a>
-    <a href="#harmonia" data-v="harmonia">Harmonia</a>
-    <a href="#acordes" data-v="acordes">Acordes</a>
-    <a href="#campo" data-v="campo">Campo harmônico</a>
-    <a href="#regiao" data-v="regiao">Tocar por região</a>
-    <a href="#arpejos" data-v="arpejos">Arpejos</a>
-    <a href="#caged" data-v="caged">CAGED</a>
-    <a href="#identificar" data-v="identificar">Identificar acorde</a>
-    <a href="#desafio" data-v="desafio">Desafio do braço</a>
-    <a href="#professor" data-v="professor">Shapes do professor</a>
-    <a href="#editor" data-v="editor" id="abaEditor">Modo edição</a>
+    <a href="#escalas" data-s="escalas">Escalas</a>
+    <a href="#acordes" data-s="acordes">Acordes</a>
+    <a href="#harmonia" data-s="harmonia">Harmonia</a>
+    <a href="#regiao" data-s="pratica">Prática</a>
+    <a href="#professor" data-s="professor">Professor</a>
+  </nav>
+  <nav class="subabas wrap" aria-label="Páginas da seção">
+    <div class="sub-grupo" data-sec="escalas" hidden><a href="#escalas" data-v="escalas">Escalas</a><a href="#familias" data-v="familias">Famílias de modos</a><a href="#caged" data-v="caged">CAGED</a></div>
+    <div class="sub-grupo" data-sec="acordes" hidden><a href="#acordes" data-v="acordes">Dicionário de acordes</a><a href="#arpejos" data-v="arpejos">Arpejos</a><a href="#identificar" data-v="identificar">Identificar acorde</a></div>
+    <div class="sub-grupo" data-sec="harmonia" hidden><a href="#harmonia" data-v="harmonia">Teoria</a><a href="#campo" data-v="campo">Campo harmônico</a></div>
+    <div class="sub-grupo" data-sec="pratica" hidden><a href="#regiao" data-v="regiao">Tocar por região</a><a href="#desafio" data-v="desafio">Desafio do braço</a></div>
+    <div class="sub-grupo" data-sec="professor" hidden><a href="#professor" data-v="professor">Shapes do professor</a><a href="#editor" data-v="editor" id="abaEditor">Modo edição</a></div>
   </nav>
 </header>
 
@@ -329,13 +329,25 @@
       </div>
       <p id="rodapeTexto">Escalas, modos, acordes e harmonia no braço do instrumento. Feito para quem estuda e para quem ensina música.</p>
     </div>
-    <nav class="rodape-col" aria-label="Estudo">
-      <h4>Estudo</h4>
-      <ul><li><a href="#escalas">Escalas</a></li><li><a href="#familias">Famílias de modos</a></li><li><a href="#harmonia">Harmonia</a></li><li><a href="#caged">CAGED</a></li></ul>
+    <nav class="rodape-col" aria-label="Escalas">
+      <h4>Escalas</h4>
+      <ul><li><a href="#escalas">Escalas</a></li><li><a href="#familias">Famílias de modos</a></li><li><a href="#caged">CAGED</a></li></ul>
     </nav>
-    <nav class="rodape-col" aria-label="Acordes e professor">
+    <nav class="rodape-col" aria-label="Acordes">
       <h4>Acordes</h4>
-      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#regiao">Tocar por região</a></li><li><a href="#arpejos">Arpejos</a></li><li><a href="#identificar">Identificar acorde</a></li><li><a href="#desafio">Desafio do braço</a></li><li><a href="#professor">Shapes do professor</a></li></ul>
+      <ul><li><a href="#acordes">Dicionário de acordes</a></li><li><a href="#arpejos">Arpejos</a></li><li><a href="#identificar">Identificar acorde</a></li></ul>
+    </nav>
+    <nav class="rodape-col" aria-label="Harmonia">
+      <h4>Harmonia</h4>
+      <ul><li><a href="#harmonia">Teoria</a></li><li><a href="#campo">Campo harmônico</a></li></ul>
+    </nav>
+    <nav class="rodape-col" aria-label="Prática">
+      <h4>Prática</h4>
+      <ul><li><a href="#regiao">Tocar por região</a></li><li><a href="#desafio">Desafio do braço</a></li></ul>
+    </nav>
+    <nav class="rodape-col" aria-label="Professor">
+      <h4>Professor</h4>
+      <ul><li><a href="#professor">Shapes do professor</a></li><li><a href="#editor">Modo edição</a></li></ul>
     </nav>
   </div>
   <div class="wrap rodape-base"><span id="rodapeCopy">© Scalebox</span><span id="rodapeSite">scalebox.app.br</span></div>
