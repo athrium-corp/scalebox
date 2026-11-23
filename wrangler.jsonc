@@ -1,8 +1,11 @@
 // Configuração do Worker "scalebox" na Cloudflare.
-// A cada push, a Cloudflare roda "node scripts/gerar.js" (monta a pasta dist) e publica a pasta dist.
+// Antes de publicar, o wrangler roda "node gerar.js" (monta a pasta dist) e depois publica a pasta dist.
 {
   "name": "scalebox",
   "compatibility_date": "2025-11-01",
+  "build": {
+    "command": "node gerar.js"
+  },
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page",
