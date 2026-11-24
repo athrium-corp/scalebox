@@ -6,7 +6,7 @@
    Rodar no computador: node scripts/gerar.js   (não precisa instalar nada)
    Não precisa editar este arquivo, exceto para mudar textos de título/descrição (tabela TXT abaixo). */
 "use strict";
-const fs = require("fs"), path = require("path"), vm = require("vm");
+const fs = require("fs"), path = require("path"), vm = require("vm"), crypto = require("crypto");
 
 // funciona com o script em scripts/gerar.js ou solto na raiz do repositório (gerar.js)
 const RAIZ = path.basename(__dirname) === "scripts" ? path.resolve(__dirname, "..") : __dirname, DIST = path.join(RAIZ, "dist");
@@ -192,7 +192,23 @@ for (const [n, modo] of TONS) {
 
 /* ---------- montagem do HTML ---------- */
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const BASE = ler("index.html");
+let BASE = ler("index.html");
+/* desempenho: junta todos os scripts do fim da página num arquivo só e o CSS em outro,
+   com um código no nome (muda quando o conteúdo muda), para o navegador guardar em cache por muito tempo */
+const PACOTES = {};
+function pacote(ext, conteudo) {
+  const h = crypto.createHash("sha1").update(conteudo).digest("hex").slice(0, 10), nome = `assets/sb-${h}.${ext}`;
+  PACOTES[nome] = conteudo; return "/" + nome;
+}
+{
+  const locais = [...BASE.matchAll(/<script src="(?!https?:)([^"]+)"><\/script>\s*/g)].filter(m => !/i18n/.test(m[1]));
+  if (locais.length) {
+    const js = locais.map(m => `/* ${m[1].split("/").pop()} */\n` + ler(m[1].split("/").pop())).join("\n;\n");
+    const tag = `<script src="${pacote("js", js)}"></script>\n`;
+    locais.forEach((m, i) => { BASE = BASE.replace(m[0], i === locais.length - 1 ? tag : ""); });
+  }
+  BASE = BASE.replace(/<link rel="stylesheet" href="(?!https?:)([^"]+\.css)">/g, (m, f) => `<link rel="stylesheet" href="${pacote("css", ler(f.split("/").pop()))}">`);
+}
 const OG = l => url(`og-${l}.png`) || url("og-pt.png");
 const ICONE512 = url("icone-512.png"), ICONE180 = url("icone-180.png");
 
@@ -200,8 +216,8 @@ function linksRodape(lang) {
   const P = PAGINAS.filter(p => p.id.startsWith("esc-")), K = PAGINAS.filter(p => p.id.startsWith("tom-")), CI = PAGINAS.filter(p => p.id.startsWith("ciclo-"));
   const li = p => `<li><a href="${p.l[lang].url}">${esc(p.l[lang].nome)}</a></li>`;
   return `<div class="wrap rodape-links" data-sem-traducao>
-  <nav aria-label="${esc(TXT[lang].todasEsc)}"><h4>${esc(TXT[lang].todasEsc)}</h4><ul>${P.map(li).join("")}</ul></nav>
-  <nav aria-label="${esc(TXT[lang].todosTons)}"><h4>${esc(TXT[lang].todosTons)}</h4><ul>${K.map(li).join("")}</ul>${CI.length ? `<h4>${esc(TXT[lang].ciclos[0].split(/:| :/)[0])}</h4><ul class="ul-ciclos">${CI.map(li).join("")}</ul>` : ""}</nav>
+  <nav aria-label="${esc(TXT[lang].todasEsc)}"><details><summary>${esc(TXT[lang].todasEsc)}</summary><ul>${P.map(li).join("")}</ul></details></nav>
+  <nav aria-label="${esc(TXT[lang].todosTons)}"><details><summary>${esc(TXT[lang].todosTons)}</summary><ul>${K.map(li).join("")}</ul></details>${CI.length ? `<details><summary>${esc(TXT[lang].ciclos[0].split(/:| :/)[0])}</summary><ul class="ul-ciclos">${CI.map(li).join("")}</ul></details>` : ""}</nav>
 </div>`;
 }
 
@@ -263,6 +279,14 @@ for (const p of PAGINAS) for (const l of LANGS) {
 }
 sm.push("</urlset>");
 fs.writeFileSync(path.join(DIST, "sitemap.xml"), sm.join("\n"));
+for (const [nome, conteudo] of Object.entries(PACOTES)) { const d = path.join(DIST, nome); fs.mkdirSync(path.dirname(d), { recursive: true }); fs.writeFileSync(d, conteudo); }
+// cache: pacotes com código no nome ficam guardados 1 ano; dicionários 1 dia; imagens 1 semana; páginas sempre conferidas
+fs.writeFileSync(path.join(DIST, "_headers"), [
+  "/assets/*", "  Cache-Control: public, max-age=31536000, immutable", "",
+  ...[...new Set(todos.filter(f => /(^|\/)i18n[^/]*\.js$/.test(f)).map(f => "/" + f))].flatMap(f => [f, "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400", ""]),
+  ...[...new Set(todos.filter(f => /\.(png|svg|jpg|webp|ico)$/.test(f)).map(f => "/" + f))].flatMap(f => [f, "  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000", ""]),
+  "/sitemap.xml", "  Cache-Control: public, max-age=3600", "",
+].join("\n"));
 fs.writeFileSync(path.join(DIST, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 fs.writeFileSync(path.join(DIST, "site.webmanifest"), JSON.stringify({ name: "Scalebox", short_name: "Scalebox", description: TXT.pt.home[1], start_url: "/", display: "standalone", background_color: "#12161b", theme_color: "#12161b", icons: [ICONE180 && { src: ICONE180, sizes: "180x180", type: "image/png" }, ICONE512 && { src: ICONE512, sizes: "512x512", type: "image/png" }, url("icone.svg") && { src: url("icone.svg"), sizes: "any", type: "image/svg+xml" }].filter(Boolean) }, null, 2));
 const LOGO = url("logo.svg") || url("icone.svg") || url("favicon.svg");

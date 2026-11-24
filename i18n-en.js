@@ -873,7 +873,8 @@ I18N.add({
   "terça menor ({0} semitons)": "minor third ({0} semitones)",
   "trítono ({0} semitons)": "tritone ({0} semitones)",
   "É o ciclo das quintas no sentido contrário: cada nota fica uma quarta justa acima da anterior. É o movimento mais comum das fundamentais na música tonal ({0} → {1}, {2} → {3} → {4}).": "It is the circle of fifths in the opposite direction: each note is a perfect fourth above the previous one. It is the most common root movement in tonal music ({0} → {1}, {2} → {3} → {4}).",
-  "■ Parar": "■ Stop"
+  "■ Parar": "■ Stop",
+  "Dó Ré Mi": "Do Re Mi"
 });
 I18N.addPat([
   [/^Duas notas tocadas juntas, sempre dentro da escala de (.+?)\. Escolha o intervalo e o par de cordas\.$/,(m,tr)=>{const T=x=>tr(x,true)||x;return `Two notes played together, always within the ${T(m[1])} scale. Pick the interval and the string pair.`;}],

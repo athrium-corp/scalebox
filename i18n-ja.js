@@ -873,7 +873,8 @@ I18N.add({
   "terça menor ({0} semitons)": "短3度({0}半音)",
   "trítono ({0} semitons)": "トライトーン({0}半音)",
   "É o ciclo das quintas no sentido contrário: cada nota fica uma quarta justa acima da anterior. É o movimento mais comum das fundamentais na música tonal ({0} → {1}, {2} → {3} → {4}).": "5度圏を逆回りしたものです。各音が前の音の完全4度上にあります。調性音楽で最もよくあるルートの動きです({0} → {1}、{2} → {3} → {4})。",
-  "■ Parar": "■ 停止"
+  "■ Parar": "■ 停止",
+  "Dó Ré Mi": "ドレミ"
 });
 I18N.addPat([
   [/^Duas notas tocadas juntas, sempre dentro da escala de (.+?)\. Escolha o intervalo e o par de cordas\.$/,(m,tr)=>{const T=x=>tr(x,true)||x;return `2つの音を同時に鳴らします。常に${T(m[1])}スケールの中で。音程と弦のペアを選んでください。`;}],

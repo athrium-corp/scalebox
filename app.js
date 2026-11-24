@@ -428,7 +428,7 @@ function renderAtual(v){
   else if(v==="editor") renderEditor();
   else renderEscalas();
 }
-function renderSeg(){document.querySelectorAll("#segRotulo button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===rotulo)));}
+function renderSeg(){document.querySelectorAll("#segRotulo button,#segRotuloMob button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===rotulo)));}
 
 /* ---------- início ---------- */
 function iniciar(){
@@ -446,8 +446,13 @@ function iniciar(){
   ["eEscala","eTonica","eInstr"].forEach(id=>$(id).onchange=renderEscalas);
   ["fFam","fInstr","fTonA","fTonB"].forEach(id=>$(id).onchange=renderFamilias);
   $("cMaj").onchange=$("cMin").onchange=()=>renderAtual("caged");
-  document.querySelectorAll("#segRotulo button").forEach(b=>b.onclick=()=>{rotulo=b.dataset.v;store.set("rotulo",rotulo);renderSeg();renderAtual();});
+  document.querySelectorAll("#segRotulo button,#segRotuloMob button").forEach(b=>b.onclick=()=>{rotulo=b.dataset.v;store.set("rotulo",rotulo);renderSeg();renderAtual();});
   renderSeg();
+  // celular: o topo rola para cima e deixa só as páginas da seção presas no alto
+  const topoH=()=>{const t=document.querySelector(".topo-in");if(t)document.documentElement.style.setProperty("--topo-h",t.offsetHeight+"px");};
+  topoH(); window.addEventListener("resize",topoH);
+  // rodapé: listas abertas no computador, recolhidas no celular
+  if(window.matchMedia("(min-width:641px)").matches) document.querySelectorAll(".rodape-links details").forEach(d=>d.open=true);
   $("pImprimir").onclick=()=>window.print();
   $("btnImprimir").onclick=()=>{prepararImpressao();window.print();};
   window.addEventListener("beforeprint",prepararImpressao);
