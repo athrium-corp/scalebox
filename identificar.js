@@ -227,7 +227,7 @@ function lerTab(txt){
 function iniciar(api){
   API=api;
   const sel=$("idInstr"); if(!sel) return;
-  sel.innerHTML=Object.entries(B.INSTRUMENTOS).map(([k,v])=>`<option value="${k}">${E(v.nome)}</option>`).join("");
+  sel.innerHTML=B.opcoesInstr();
   sel.value=instr;
   sel.onchange=()=>{instr=sel.value;marc={};escolha=0;render();};
   $("idOuvir").onclick=()=>{const n=notasMarcadas();if(n.length&&window.SOM)SOM.acorde(n.map(x=>x.midi),SOM.agora()+.03,{espaco:.03});};

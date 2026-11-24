@@ -103,7 +103,7 @@ function tr(s,semRegistro){
 const NOTACAO=/^(?:[\s()\/\-–—+°ø#b\d]|\{\d+\}|add|sus|maj|dim|aug|m|M|VII|VI|IV|III|II|V|I|[A-G])*$/;
 function anota(k){if(NOTACAO.test(k)||/^(?:Dó|Do|Ré|Re|Mi|Fá|Fa|Sol|Lá|La|Si)(?:#|b)?$/.test(k))return; if(/[A-Za-zÀ-ÿ]{2,}/.test(k.replace(/<[^>]+>|\{\d+\}/g,"")))faltando.set(k,(faltando.get(k)||0)+1);}
 const INLINE=new Set(["B","STRONG","I","EM","SMALL","CODE","A","BR","KBD","SPAN","SUP","SUB"]);
-const ATTRS=["title","placeholder","aria-label","alt"];
+const ATTRS=["title","placeholder","aria-label","alt","label"];
 function trTexto(node,quieto){
   const v=node.nodeValue; if(!v||!/[A-Za-zÀ-ÿ]/.test(v)) return;
   const r=tr(v,quieto);

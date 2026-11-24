@@ -14,7 +14,25 @@ const INSTRUMENTOS={
   cavaco:{nome:"Cavaquinho (Ré Sol Si Ré)", midi:[50,55,59,62], casas:15},
   ukulele:{nome:"Ukulele (Sol Dó Mi Lá)", midi:[67,60,64,69], casas:12},
   bandolim:{nome:"Bandolim (Sol Ré Lá Mi)", midi:[55,62,69,76], casas:12},
+  // afinações alternativas do violão / guitarra (da 6ª para a 1ª corda)
+  meiotom:{nome:"Meio tom abaixo (Mib Láb Réb Solb Sib Mib)", midi:[39,44,49,54,58,63], casas:15, grupo:"Afinações alternativas"},
+  umtom:{nome:"Um tom abaixo (Ré Sol Dó Fá Lá Ré)", midi:[38,43,48,53,57,62], casas:15, grupo:"Afinações alternativas"},
+  dropd:{nome:"Drop D (Ré Lá Ré Sol Si Mi)", midi:[38,45,50,55,59,64], casas:15, grupo:"Afinações alternativas"},
+  dropc:{nome:"Drop C (Dó Sol Dó Fá Lá Ré)", midi:[36,43,48,53,57,62], casas:15, grupo:"Afinações alternativas"},
+  dadgad:{nome:"DADGAD (Ré Lá Ré Sol Lá Ré)", midi:[38,45,50,55,57,62], casas:15, grupo:"Afinações alternativas"},
+  solaberto:{nome:"Sol aberto (Ré Sol Ré Sol Si Ré)", midi:[38,43,50,55,59,62], casas:15, grupo:"Afinações alternativas"},
+  reaberto:{nome:"Ré aberto (Ré Lá Ré Fá# Lá Ré)", midi:[38,45,50,54,57,62], casas:15, grupo:"Afinações alternativas"},
+  miaberto:{nome:"Mi aberto (Mi Si Mi Sol# Si Mi)", midi:[40,47,52,56,59,64], casas:15, grupo:"Afinações alternativas"},
+  doaberto:{nome:"Dó aberto (Dó Sol Dó Sol Dó Mi)", midi:[36,43,48,55,60,64], casas:15, grupo:"Afinações alternativas"},
+  cavacomi:{nome:"Cavaquinho (Ré Sol Si Mi)", midi:[50,55,59,64], casas:15, grupo:"Afinações alternativas"},
 };
+/* <option>s do seletor de instrumento, com as afinações alternativas num grupo separado */
+function opcoesInstr(){
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const base=[],grupos={};
+  for(const [k,v] of Object.entries(INSTRUMENTOS)){const o=`<option value="${k}">${esc(v.nome)}</option>`;if(v.grupo)(grupos[v.grupo]=grupos[v.grupo]||[]).push(o);else base.push(o);}
+  return base.join("")+Object.entries(grupos).map(([g,os])=>`<optgroup label="${esc(g)}">${os.join("")}</optgroup>`).join("");
+}
 const pc=m=>((m%12)+12)%12;
 const tonica=n=>TONICAS.find(t=>t.n===n)||TONICAS[0];
 
@@ -109,5 +127,5 @@ function desenhar(o){
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 
-window.BRACO={LETRAS,SOLF,TONICAS,PADRAO,INSTRUMENTOS,pc,tonica,lerIntervalo,soletrar,lerFormula,notasJanela,casaTonica,posicao,desenhar,esc};
+window.BRACO={LETRAS,SOLF,TONICAS,PADRAO,INSTRUMENTOS,opcoesInstr,pc,tonica,lerIntervalo,soletrar,lerFormula,notasJanela,casaTonica,posicao,desenhar,esc};
 })();

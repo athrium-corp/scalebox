@@ -31,7 +31,7 @@ function preencherEscalas(sel,val){
   sel.value=ESCMAP.has(val)?val:ESC[0].id;
 }
 function preencherTonicas(sel,val){sel.innerHTML=B.TONICAS.map(t=>`<option value="${t.n}">${E(nomeNota(t.n))}</option>`).join("");sel.value=val;}
-function preencherInstr(sel,val){sel.innerHTML=Object.entries(B.INSTRUMENTOS).map(([k,v])=>`<option value="${k}">${E(v.nome)}</option>`).join("");sel.value=B.INSTRUMENTOS[val]?val:"violao";}
+function preencherInstr(sel,val){sel.innerHTML=B.opcoesInstr();sel.value=B.INSTRUMENTOS[val]?val:"violao";}
 function nomeNota(n){if(window.I18N&&I18N.lang==="en")return n;const t=B.tonica(n);const solf=B.soletrar(t,"1",true);return `${solf} (${n})`;}
 
 /* ---------- rótulos ---------- */
@@ -396,8 +396,8 @@ function atualizarSelectsEscala(){
 }
 
 /* ---------- navegação ---------- */
-const VIEWS=["escalas","familias","harmonia","acordes","campo","ciclos","regiao","arpejos","caged","identificar","desafio","professor","editor"];
-const SECAO={"escalas": "escalas", "familias": "escalas", "caged": "escalas", "acordes": "acordes", "arpejos": "acordes", "identificar": "acordes", "harmonia": "harmonia", "campo": "harmonia", "ciclos": "harmonia", "regiao": "pratica", "desafio": "pratica", "professor": "professor", "editor": "professor"};
+const VIEWS=["escalas","familias","harmonia","acordes","campo","ciclos","regiao","arpejos","caged","identificar","desafio","afinador","capotraste","professor","editor"];
+const SECAO={"escalas": "escalas", "familias": "escalas", "caged": "escalas", "acordes": "acordes", "arpejos": "acordes", "identificar": "acordes", "harmonia": "harmonia", "campo": "harmonia", "ciclos": "harmonia", "regiao": "pratica", "desafio": "pratica", "afinador": "pratica", "capotraste": "pratica", "professor": "professor", "editor": "professor"};
 function editorVisivel(){return CFG.mostrarEditor||location.hash==="#editor"||store.get("editorDesbloqueado",false);}
 function rota(){
   let v=location.hash.slice(1)||(window.SB_INICIO&&SB_INICIO.v); if(!VIEWS.includes(v)) v="escalas";
@@ -405,10 +405,13 @@ function rota(){
   $("abaEditor").hidden=!editorVisivel();
   VIEWS.forEach(x=>{$("v-"+x).hidden=x!==v;});
   if(v!=="ciclos"&&window.CICLOS) CICLOS.parar();
+  if(v!=="afinador"&&window.AFINADOR) AFINADOR.parar();
+  if(v!=="capotraste"&&window.CAPO) CAPO.parar();
   const sec=SECAO[v]||"escalas"; store.set("ultima."+sec,v);
   document.querySelectorAll(".abas a").forEach(a=>{a.classList.toggle("ativa",a.dataset.s===sec);const u=store.get("ultima."+a.dataset.s,null);if(u&&SECAO[u]===a.dataset.s&&(u!=="editor"||editorVisivel()))a.href="#"+u;});
   document.querySelectorAll(".sub-grupo").forEach(g=>{g.hidden=g.dataset.sec!==sec;});
   document.querySelectorAll(".subabas a").forEach(a=>a.classList.toggle("ativa",a.dataset.v===v));
+  {const nav=document.querySelector(".subabas"),at=document.querySelector(".subabas a.ativa");if(nav&&at&&nav.scrollWidth>nav.clientWidth)nav.scrollLeft=at.offsetLeft-nav.clientWidth/2+at.offsetWidth/2;}
   renderAtual(v);
 }
 function renderAtual(v){
@@ -419,6 +422,8 @@ function renderAtual(v){
   else if(v==="acordes") window.ACORDES&&ACORDES.render();
   else if(v==="campo") window.CAMPO&&CAMPO.render();
   else if(v==="ciclos") window.CICLOS&&CICLOS.render();
+  else if(v==="afinador") window.AFINADOR&&AFINADOR.render();
+  else if(v==="capotraste") window.CAPO&&CAPO.render();
   else if(v==="arpejos") window.ARPEJOS&&ARPEJOS.render();
   else if(v==="caged"){renderCaged(CAGED_MAIOR,"cMaj","cTblM",false);renderCaged(CAGED_MENOR,"cMin","cTblm",true);window.ACORDES&&ACORDES.renderCaged();}
   else if(v==="identificar") window.IDENT&&IDENT.render();
@@ -496,6 +501,8 @@ function iniciar(){
     if(window.ACORDES){preencherTonicas($("aTon"),"C");preencherTonicas($("chTon"),"C");preencherTonicas($("crTon"),"C");preencherTonicas($("arTon"),"C");ACORDES.iniciar(API);}
     if(window.IDENT) IDENT.iniciar(API);
     if(window.CICLOS) CICLOS.iniciar(API);
+    if(window.AFINADOR) AFINADOR.iniciar(API);
+    if(window.CAPO) CAPO.iniciar(API);
     if(window.REGIAO) REGIAO.iniciar(API);
     if(window.DESAFIO) DESAFIO.iniciar(API);
   }
@@ -514,6 +521,8 @@ function prepararImpressao(){
   else if(v==="acordes"){t=ACORDES.titulo();}
   else if(v==="campo"){t=CAMPO.titulo();}
   else if(v==="ciclos"){t=window.CICLOS?CICLOS.titulo():"Ciclos";}
+  else if(v==="afinador"){t=window.AFINADOR?AFINADOR.titulo():"Afinador";}
+  else if(v==="capotraste"){t=window.CAPO?CAPO.titulo():"Capotraste";}
   else if(v==="arpejos"){t=ARPEJOS.titulo();}
   else if(v==="caged"){t=`CAGED · ${nomeNota($("cMaj").value)} maior e ${nomeNota($("cMin").value)} menor`;}
   else if(v==="desafio"){t="Desafio do braço";}
