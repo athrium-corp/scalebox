@@ -925,7 +925,19 @@ I18N.add({
   "Afinações alternativas": "Alternate tunings",
   "■ Desligar microfone": "■ Turn off microphone",
   "▶ Ouvir como soa": "▶ Hear how it sounds",
-  "🎤 Ligar microfone": "🎤 Turn on microphone"
+  "🎤 Ligar microfone": "🎤 Turn on microphone",
+  "Automático": "Automatic",
+  "Corda escolhida": "Chosen string",
+  "afinadas": "in tune",
+  "Começar a afinar": "Start tuning",
+  "Toque para ligar o microfone": "Tap to turn on the microphone",
+  "Recomeçar a contagem": "Reset the count",
+  "Referência": "Reference",
+  "Lá = {0} Hz": "A = {0} Hz",
+  "Toque uma corda por vez e deixe soar. Quando o círculo fica verde, a corda está afinada.": "Play one string at a time and let it ring. When the circle turns green, the string is in tune.",
+  "Ferramentas": "Tools",
+  "Campo por acorde": "Field by chord",
+  "Andamento, compasso, divisão e acento no primeiro tempo. O metrônomo também fica no botão do topo, em todas as páginas, e continua tocando enquanto você navega.": "Tempo, time signature, subdivision and first-beat accent. The metronome is also on the button at the top of every page, and it keeps playing while you browse."
 });
 I18N.addPat([
   [/^Duas notas tocadas juntas, sempre dentro da escala de (.+?)\. Escolha o intervalo e o par de cordas\.$/,(m,tr)=>{const T=x=>tr(x,true)||x;return `Two notes played together, always within the ${T(m[1])} scale. Pick the interval and the string pair.`;}],

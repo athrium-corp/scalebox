@@ -25,6 +25,7 @@ function montar(){
     </div>
     <div class="metro-acoes"><button class="btn primario metro-play" id="mtPlay">▶ Iniciar</button><button class="btn" id="mtTap">Tap</button></div>`;
   document.body.appendChild(p);
+  if(pendente!==undefined) setTimeout(()=>embutir(pendente),0);
   $("mtSub").value=String(sub);
   pontos();
   $("mtFechar").onclick=()=>{p.hidden=true;$("btnMetro").setAttribute("aria-expanded","false");};
@@ -36,7 +37,7 @@ function montar(){
   $("mtPlay").onclick=alternar;
   $("mtTap").onclick=tap;
   const b=$("btnMetro");
-  if(b) b.onclick=()=>{p.hidden=!p.hidden;b.setAttribute("aria-expanded",String(!p.hidden));};
+  if(b) b.onclick=()=>{if(p.classList.contains("embutido")){p.scrollIntoView({block:"center",behavior:"smooth"});return;}p.hidden=!p.hidden;b.setAttribute("aria-expanded",String(!p.hidden));};
 }
 function pontos(){const [n]=COMP[comp];$("mtDots").innerHTML=Array.from({length:n},(_,i)=>`<i class="${i===0?"um":""}"></i>`).join("");}
 function muda(v){bpm=Math.max(30,Math.min(240,Math.round(v)));$("mtVal").value=bpm;$("mtVal").textContent=bpm;$("mtSlider").value=bpm;$("mtNome").textContent=andamento(bpm);salvar();}
@@ -64,5 +65,11 @@ function alternar(){
 }
 document.addEventListener("keydown",e=>{const p=$("metro");if(!p||p.hidden)return;if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
   if(e.key===" "&&document.activeElement.closest&&document.activeElement.closest("#metro")===null){e.preventDefault();alternar();}});
+/* página "Metrônomo": o mesmo painel aparece dentro da página (e volta a flutuar ao sair) */
+let pendente;
+function embutir(el){const p=$("metro");if(!p){pendente=el;return;}
+  if(el){if(p.parentNode!==el){el.appendChild(p);}p.classList.add("embutido");p.hidden=false;}
+  else if(p.classList.contains("embutido")){document.body.appendChild(p);p.classList.remove("embutido");p.hidden=true;$("btnMetro")&&$("btnMetro").setAttribute("aria-expanded","false");}}
+window.METRO={embutir};
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",montar); else montar();
 })();

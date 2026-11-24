@@ -46,13 +46,15 @@
     <a href="#acordes" data-s="acordes"><svg class="ab-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 9h16M4 15h16M10 3v18M15 3v18" stroke="currentColor" stroke-width="1.5"/><circle cx="12.5" cy="12" r="2" fill="currentColor"/></svg>Acordes</a>
     <a href="#harmonia" data-s="harmonia"><svg class="ab-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="3.5" r="2" fill="currentColor"/><circle cx="19.4" cy="16.2" r="2" fill="currentColor"/><circle cx="4.6" cy="16.2" r="2" fill="currentColor"/></svg>Harmonia</a>
     <a href="#regiao" data-s="pratica"><svg class="ab-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>Prática</a>
+    <a href="#afinador" data-s="ferramentas"><svg class="ab-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0 5 5L21 13l-8 8-1.5-1.5a4 4 0 0 0-5-5L5 13l8-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 15l-5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Ferramentas</a>
     <a href="#professor" data-s="professor"><svg class="ab-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Professor</a>
   </nav>
   <nav class="subabas wrap" aria-label="Páginas da seção">
     <div class="sub-grupo" data-sec="escalas" hidden><a href="#escalas" data-v="escalas">Escalas</a><a href="#familias" data-v="familias">Famílias de modos</a><a href="#caged" data-v="caged">CAGED</a></div>
     <div class="sub-grupo" data-sec="acordes" hidden><a href="#acordes" data-v="acordes">Dicionário de acordes</a><a href="#arpejos" data-v="arpejos">Arpejos</a><a href="#identificar" data-v="identificar">Identificar acorde</a></div>
-    <div class="sub-grupo" data-sec="harmonia" hidden><a href="#harmonia" data-v="harmonia">Teoria</a><a href="#campo" data-v="campo">Campo harmônico</a><a href="#ciclos" data-v="ciclos">Ciclos</a></div>
-    <div class="sub-grupo" data-sec="pratica" hidden><a href="#regiao" data-v="regiao">Tocar por região</a><a href="#desafio" data-v="desafio">Desafio do braço</a><a href="#afinador" data-v="afinador">Afinador</a><a href="#capotraste" data-v="capotraste">Capotraste</a></div>
+    <div class="sub-grupo" data-sec="harmonia" hidden><a href="#harmonia" data-v="harmonia">Teoria</a><a href="#campo" data-v="campo">Campo por acorde</a><a href="#ciclos" data-v="ciclos">Ciclos</a></div>
+    <div class="sub-grupo" data-sec="pratica" hidden><a href="#regiao" data-v="regiao">Tocar por região</a><a href="#desafio" data-v="desafio">Desafio do braço</a></div>
+    <div class="sub-grupo" data-sec="ferramentas" hidden><a href="#afinador" data-v="afinador">Afinador</a><a href="#metronomo" data-v="metronomo">Metrônomo</a><a href="#capotraste" data-v="capotraste">Capotraste</a></div>
     <div class="sub-grupo" data-sec="professor" hidden><a href="#professor" data-v="professor">Shapes do professor</a><a href="#editor" data-v="editor" id="abaEditor">Modo edição</a></div>
   </nav>
 </header>
@@ -151,8 +153,13 @@
 <section class="view" id="v-afinador">
   <div class="controls">
     <label>Afinação <select id="afInstr"></select></label>
+    <label>Referência <select id="afLa"></select></label>
   </div>
   <div id="afOut" class="hconteudo"></div>
+</section>
+<section class="view" id="v-metronomo">
+  <p class="nota">Andamento, compasso, divisão e acento no primeiro tempo. O metrônomo também fica no botão do topo, em todas as páginas, e continua tocando enquanto você navega.</p>
+  <div id="metroAqui"></div>
 </section>
 <section class="view" id="v-capotraste">
   <div class="controls">
@@ -373,11 +380,15 @@
     </nav>
     <nav class="rodape-col" aria-label="Harmonia">
       <h4>Harmonia</h4>
-      <ul><li><a href="#harmonia">Teoria</a></li><li><a href="#campo">Campo harmônico</a></li><li><a href="#ciclos">Ciclos</a></li></ul>
+      <ul><li><a href="#harmonia">Teoria</a></li><li><a href="#campo">Campo por acorde</a></li><li><a href="#ciclos">Ciclos</a></li></ul>
     </nav>
     <nav class="rodape-col" aria-label="Prática">
       <h4>Prática</h4>
-      <ul><li><a href="#regiao">Tocar por região</a></li><li><a href="#desafio">Desafio do braço</a></li><li><a href="#afinador">Afinador</a></li><li><a href="#capotraste">Capotraste</a></li></ul>
+      <ul><li><a href="#regiao">Tocar por região</a></li><li><a href="#desafio">Desafio do braço</a></li></ul>
+    </nav>
+    <nav class="rodape-col" aria-label="Ferramentas">
+      <h4>Ferramentas</h4>
+      <ul><li><a href="#afinador">Afinador</a></li><li><a href="#metronomo">Metrônomo</a></li><li><a href="#capotraste">Capotraste</a></li></ul>
     </nav>
     <nav class="rodape-col" aria-label="Professor">
       <h4>Professor</h4>

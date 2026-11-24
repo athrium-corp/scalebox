@@ -925,7 +925,19 @@ I18N.add({
   "Afinações alternativas": "Afinaciones alternativas",
   "■ Desligar microfone": "■ Apagar micrófono",
   "▶ Ouvir como soa": "▶ Escuchar cómo suena",
-  "🎤 Ligar microfone": "🎤 Activar micrófono"
+  "🎤 Ligar microfone": "🎤 Activar micrófono",
+  "Automático": "Automático",
+  "Corda escolhida": "Cuerda elegida",
+  "afinadas": "afinadas",
+  "Começar a afinar": "Empezar a afinar",
+  "Toque para ligar o microfone": "Toca para activar el micrófono",
+  "Recomeçar a contagem": "Reiniciar el conteo",
+  "Referência": "Referencia",
+  "Lá = {0} Hz": "La = {0} Hz",
+  "Toque uma corda por vez e deixe soar. Quando o círculo fica verde, a corda está afinada.": "Toca una cuerda a la vez y déjala sonar. Cuando el círculo se pone verde, la cuerda está afinada.",
+  "Ferramentas": "Herramientas",
+  "Campo por acorde": "Campo por acorde",
+  "Andamento, compasso, divisão e acento no primeiro tempo. O metrônomo também fica no botão do topo, em todas as páginas, e continua tocando enquanto você navega.": "Tempo, compás, subdivisión y acento en el primer tiempo. El metrónomo también está en el botón de arriba, en todas las páginas, y sigue sonando mientras navegas."
 });
 I18N.addPat([
   [/^Duas notas tocadas juntas, sempre dentro da escala de (.+?)\. Escolha o intervalo e o par de cordas\.$/,(m,tr)=>{const T=x=>tr(x,true)||x;return `Dos notas tocadas a la vez, siempre dentro de la escala de ${T(m[1])}. Elige el intervalo y el par de cuerdas.`;}],

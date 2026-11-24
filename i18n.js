@@ -106,6 +106,7 @@ const INLINE=new Set(["B","STRONG","I","EM","SMALL","CODE","A","BR","KBD","SPAN"
 const ATTRS=["title","placeholder","aria-label","alt","label"];
 function trTexto(node,quieto){
   const v=node.nodeValue; if(!v||!/[A-Za-zÀ-ÿ]/.test(v)) return;
+  const pai=node.parentElement; if(pai&&pai.closest&&pai.closest("[data-sem-traducao]")) return;
   const r=tr(v,quieto);
   if(r!=null){feitos.add(r.replace(/\s+/g," ").trim());const lead=v.match(/^\s*/)[0],tail=v.match(/\s*$/)[0];const nv=lead+r+tail;if(nv!==v)node.nodeValue=nv;}
 

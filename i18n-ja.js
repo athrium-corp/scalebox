@@ -925,7 +925,19 @@ I18N.add({
   "Afinações alternativas": "変則チューニング",
   "■ Desligar microfone": "■ マイクをオフ",
   "▶ Ouvir como soa": "▶ 響きを聴く",
-  "🎤 Ligar microfone": "🎤 マイクをオン"
+  "🎤 Ligar microfone": "🎤 マイクをオン",
+  "Automático": "自動",
+  "Corda escolhida": "弦を選ぶ",
+  "afinadas": "本OK",
+  "Começar a afinar": "チューニング開始",
+  "Toque para ligar o microfone": "タップしてマイクをオン",
+  "Recomeçar a contagem": "カウントをリセット",
+  "Referência": "基準ピッチ",
+  "Lá = {0} Hz": "A = {0} Hz",
+  "Toque uma corda por vez e deixe soar. Quando o círculo fica verde, a corda está afinada.": "1本ずつ弾いて音を伸ばしてください。円が緑になったらチューニングOKです。",
+  "Ferramentas": "ツール",
+  "Campo por acorde": "コード別ダイアトニック",
+  "Andamento, compasso, divisão e acento no primeiro tempo. O metrônomo também fica no botão do topo, em todas as páginas, e continua tocando enquanto você navega.": "テンポ、拍子、サブディビジョン、1拍目のアクセント。メトロノームはすべてのページの上部ボタンからも使え、ページを移動しても鳴り続けます。"
 });
 I18N.addPat([
   [/^Duas notas tocadas juntas, sempre dentro da escala de (.+?)\. Escolha o intervalo e o par de cordas\.$/,(m,tr)=>{const T=x=>tr(x,true)||x;return `2つの音を同時に鳴らします。常に${T(m[1])}スケールの中で。音程と弦のペアを選んでください。`;}],
